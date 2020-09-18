@@ -1,0 +1,15 @@
+#!/bin/bash -xe
+
+# install mysql-client (retry if network is not ready
+for i in 1 2 3 4 5; do
+  apt update && break || sleep 10;
+done
+apt -y upgrade
+apt -y install mysql-client
+
+for i in 1 2 3 4 5; do
+  mysql -uroot -P${rds_port} -h${rds_host} -p${rds_root_password} -e "CREATE DATABASE IF NOT EXISTS ${rds_db}" && break || sleep 10;
+done
+
+# install k3s with MySQL backend
+curl -svfL4 --retry 100 https://get.k3s.io | sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}"

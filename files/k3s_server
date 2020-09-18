@@ -1,0 +1,57 @@
+#!/bin/bash -xe
+
+# disable non-working ipv6 in OTC ECS
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1
+sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+
+# install mysql-client (retry if network is not ready
+for i in 1 2 3 4 5; do
+  apt update && break || sleep 10;
+done
+apt -y upgrade
+apt -y install mysql-client
+for i in 1 2 3 4 5; do
+  mysql -uroot -P${rds_port} -h${rds_host} -p${rds_root_password} -e "CREATE DATABASE IF NOT EXISTS ${rds_db}" && break || sleep 10;
+done
+
+# install k3s with MySQL backend
+curl -svfL4 --retry 100 https://get.k3s.io | sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}"
+
+# install helm (3.3 wont't work on jetstack repo)
+for i in 1 2 3 4 5; do
+  snap install helm --channel=3.2/stable --classic && break || sleep 60;
+done
+
+export KUBECONFIG=/var/lib/rancher/k3s/server/cred/admin.kubeconfig
+
+# install cert-manager
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+for i in 1 2 3 4 5; do
+  helm upgrade -i \
+    cert-manager jetstack/cert-manager \
+    --namespace cert-manager \
+    --version v1.0.1 \
+    --wait --timeout 10m0s \
+    --set installCRDs=true \
+    --create-namespace && break || sleep 10;
+done
+
+# wait some time for cert-manager to be ready
+sleep 30
+
+# install helm repo
+helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
+
+# install now Rancher
+for i in 1 2 3 4 5; do
+  helm upgrade -i rancher rancher-latest/rancher \
+    --namespace cattle-system \
+    --set hostname=${rancher_host}.${rancher_domain} \
+    --set ingress.tls.source=letsEncrypt \
+    --set letsEncrypt.email=${admin_email} \
+    --set letsEncrypt.ingress.class=traefik \
+    --wait --timeout 10m0s \
+    --create-namespace && break || sleep 60;
+done
