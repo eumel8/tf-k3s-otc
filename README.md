@@ -2,7 +2,7 @@ tf-k3s-otc
 ==========
 
 Deploy [K3S](https://k3s.io) with Terraform on Open Telekom Cloud (OTC)
-with the folling resources:
+with the following resources:
 
 * VPC
 * Subnet
@@ -15,8 +15,9 @@ with the folling resources:
 Rancher:
 --------
 
-Rancher app will installed with LetsEncrypt cert under the configured hostname. You can reach the service
-under https://<hostname>.<domain>
+Rancher app will installed with LetsEncrypt cert under the configured hostname. 
+
+You can reach the service under https://hostname.domain
 
 Prerequistes:
 ------------
@@ -30,7 +31,7 @@ sudo mv terraform /usr/local/bin/
 rm terraform.zip
 ```
 
-* create a `terraform.tfvars` file
+* Create a `terraform.tfvars` file
 
 ```
 rds_root_password = <rds_root_password>   # e.g. "12345678A+"
