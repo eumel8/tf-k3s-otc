@@ -1,3 +1,6 @@
 .terraform
 terraform.tfstate*
 terraform.tfvars
+s3/.terraform
+s3/terraform.tfstate*
+s3/terraform.tfvars
