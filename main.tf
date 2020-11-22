@@ -6,6 +6,7 @@ resource "opentelekomcloud_vpc_v1" "vpc" {
 #  count = var.create_vpc ? 1 : 0
   name  = var.vpc_name
   cidr  = var.vpc_cidr
+  shared = true
 }
 
 resource "opentelekomcloud_vpc_subnet_v1" "subnet" {
@@ -203,15 +204,17 @@ resource "opentelekomcloud_rds_instance_v3" "rds" {
 ########### 
 
 resource "opentelekomcloud_dns_zone_v2" "dns" {
+  count       = var.create_dns ? 1 : 0
   name        = "${var.rancher_domain}."
-  email       = "mcs-dis@telekom.de"
+  email       = var.admin_email
   description = "tf managed zone"
   ttl         = 300
   type        = "public"
 }
 
 resource "opentelekomcloud_dns_recordset_v2" "public_record" {
-  zone_id     = opentelekomcloud_dns_zone_v2.dns.id
+  count       = var.create_dns ? 1 : 0
+  zone_id     = opentelekomcloud_dns_zone_v2.dns[0].id
   name        = "${var.rancher_host}.${var.rancher_domain}."
   description = "tf managed zone"
   type        = "A"
