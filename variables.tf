@@ -182,11 +182,11 @@ variable "public_key" {
 # DNS vars
 ####################
 
-#variable "create_dns" {
-#  description = "Create DNS entries"
-#  type        = bool
-#  default     = false
-#}
+variable "create_dns" {
+  description = "Create DNS entries"
+  type        = bool
+  default     = false
+}
 
 variable "rancher_host" {
   description = "Public host of the rancher instance"
