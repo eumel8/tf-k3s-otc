@@ -34,7 +34,24 @@ sudo mv terraform /usr/local/bin/
 rm terraform.zip
 ```
 
-* Create a `terraform.tfvars` file
+* Switch to s3 folder and create a `terraform.tfvars` file for Terraform state S3 backend
+
+```
+bucket_name = <otc bucket name> # must be uniq
+access_key  = <otc access key>
+secret_key  = <otc secret key>
+```
+
+Deployment S3 backend:
+----------------------
+
+```
+terraform init
+terraform plan
+terraform apply -auto-approve
+```
+
+* Create a `terraform.tfvars` file in the main folder
 
 ```
 rds_root_password = <rds_root_password>   # e.g. "12345678A+"
@@ -46,10 +63,18 @@ secret_key        = <otc secret key>
 public_key        = <public ssh key vor ECS>
 ```
 
-Deployment:
------------
+* Adapt `bucket` name in `backend.tf` with the bucket name which you created before
+
+Deployment main app:
+--------------------
 
 ```
+export S3_ACCESS_KEY=<otc access key>
+export S3_SECRET_KEY=<otc secret key>
+export TF_VAR_environment=<your k3s deployment>
+
+terraform init -backend-config="access_key=$S3_ACCESS_KEY" -backend-config="secret_key=$S3_SECRET_KEY" -backend-config="key=${TF_VAR_environment}.tfstate"
+
 terraform plan
 terraform apply
 ```
