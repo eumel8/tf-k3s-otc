@@ -1,4 +1,12 @@
 ####################
+# Environment
+####################
+
+variable "environment" {
+  default = "k3s-test"
+}
+
+####################
 #   OTC auth config
 ####################
 
@@ -34,17 +42,6 @@ variable "key" {
 # VPC vars
 ####################
 
-#variable "create_vpc" {
-#  description = "Create VPC or use existing"
-#  type        = bool
-#  default     = false
-#}
-
-variable "vpc_name" {
-  description = "Name of the VPC"  
-  default     = "k3s-test"
-}
-
 variable "vpc_cidr" {
   description = "CIDR of the VPC"  
   default     = "10.1.0.0/24"
@@ -53,11 +50,6 @@ variable "vpc_cidr" {
 ####################
 # Subnet vars
 ####################
-
-variable "subnet_name" {
-  description = "Name of the VPC"  
-  default     = "k3s-test"
-}
 
 variable "subnet_cidr" {
   description = "CIDR of the Subnet"  
@@ -70,23 +62,8 @@ variable "subnet_gateway_ip" {
 }
 
 ####################
-# ELB vars
-####################
-
-variable "elb_name" {
-  description = "Name of the ELB"  
-  type = string
-  default = "lb-k3s-test"
-}
-
-####################
 # RDS vars
 ####################
-
-variable "rds_name" {
-  description = "Name of the Root"  
-  default     = "tf-k3s-test"
-}
 
 variable "rds_root_password" {
   description = "RDS Root Password"  
@@ -156,11 +133,6 @@ variable "availability_zone2" {
 variable "availability_zone3" {
   description = "Availability Zone 3 (Biere)"
   default     = "eu-de-03"
-}
-
-variable "secgroup_name" {
-  description = "Secgroup name"
-  default     = "k3s-secgroup"
 }
 
 variable "image_name" {

@@ -3,14 +3,13 @@
 # VPC part
 ########### 
 resource "opentelekomcloud_vpc_v1" "vpc" {
-#  count = var.create_vpc ? 1 : 0
-  name  = var.vpc_name
-  cidr  = var.vpc_cidr
+  name   = var.environment
+  cidr   = var.vpc_cidr
   shared = true
 }
 
 resource "opentelekomcloud_vpc_subnet_v1" "subnet" {
-  name       = var.subnet_name
+  name       = var.environment
   vpc_id     = opentelekomcloud_vpc_v1.vpc.id
   cidr       = var.subnet_cidr
   gateway_ip = var.subnet_gateway_ip
@@ -26,48 +25,48 @@ resource "opentelekomcloud_networking_floatingip_v2" "eip" {
 }
 
 resource "opentelekomcloud_lb_loadbalancer_v2" "lb" {
-  name          = var.elb_name
+  name          = "$var.environment}-lb"
   vip_subnet_id = opentelekomcloud_vpc_subnet_v1.subnet.subnet_id
 }
 
 resource "opentelekomcloud_lb_listener_v2" "listener_80" {
   protocol         = "TCP"
-  name             = "listener_80_${var.elb_name}"
+  name             = "$var.environment}-listener_80"
   protocol_port    = 80
   loadbalancer_id  = opentelekomcloud_lb_loadbalancer_v2.lb.id
 }
 
 resource "opentelekomcloud_lb_listener_v2" "listener_443" {
   protocol         = "TCP"
-  name             = "listener_443_${var.elb_name}"
+  name             = "$var.environment}-listener_443"
   protocol_port    = 443
   loadbalancer_id  = opentelekomcloud_lb_loadbalancer_v2.lb.id
 }
 
 resource "opentelekomcloud_lb_listener_v2" "listener_6443" {
   protocol         = "TCP"
-  name             = "listener_6443_${var.elb_name}"
+  name             = "$var.environment}-listener_6443"
   protocol_port    = 6443
   loadbalancer_id  = opentelekomcloud_lb_loadbalancer_v2.lb.id
 }
 
 resource "opentelekomcloud_lb_pool_v2" "pool_80" {
   protocol    = "TCP"
-  name        = "pool_80_${var.elb_name}"
+  name        = "$var.environment}-pool_80"
   lb_method   = "ROUND_ROBIN"
   listener_id = opentelekomcloud_lb_listener_v2.listener_80.id
 }
 
 resource "opentelekomcloud_lb_pool_v2" "pool_443" {
   protocol    = "TCP"
-  name        = "pool_443_${var.elb_name}"
+  name        = "$var.environment}-pool_443"
   lb_method   = "ROUND_ROBIN"
   listener_id = opentelekomcloud_lb_listener_v2.listener_443.id
 }
  
 resource "opentelekomcloud_lb_pool_v2" "pool_6443" {
   protocol    = "TCP"
-  name        = "pool_6443_${var.elb_name}"
+  name        = "$var.environment}-pool_6443"
   lb_method   = "ROUND_ROBIN"
   listener_id = opentelekomcloud_lb_listener_v2.listener_6443.id
 }
@@ -144,7 +143,7 @@ resource "opentelekomcloud_lb_member_v2" "member_6443_2" {
 # RDS part
 ########### 
 resource "opentelekomcloud_networking_secgroup_v2" "secgroup" {
-  name        = "${var.rds_name}-sg"
+  name        = "$var.environment}-rds-secgroup"
   description = "terraform security group rds"
 }
 
@@ -159,8 +158,8 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "secgroup_rule" {
 }
 
 resource "opentelekomcloud_rds_parametergroup_v3" "pg" {
-    name        = "${var.rds_name}-pg"
-    description = "Parameter Group for ${var.rds_name} RDS"
+    name        = "$var.environment}-rds-pg"
+    description = "Parameter Group for ${var.environment}-rds RDS"
     values = {
         local_infile                         = "OFF"
         max_user_connections                 = "1000"
@@ -182,7 +181,7 @@ resource "opentelekomcloud_rds_instance_v3" "rds" {
     version  = var.rds_version
     port     = var.rds_port
   }
-  name              = var.rds_name
+  name              = "$var.environment}-rds"
   security_group_id = opentelekomcloud_networking_secgroup_v2.secgroup.id
   subnet_id         = opentelekomcloud_vpc_subnet_v1.subnet.id
   vpc_id            = opentelekomcloud_vpc_v1.vpc.id
@@ -256,7 +255,7 @@ data "opentelekomcloud_images_image_v2" "image" {
  
 # Secgroup part (ECS)
 resource "opentelekomcloud_networking_secgroup_v2" "k3s-server-secgroup" {
-  name = var.secgroup_name
+  name = "$var.environment}-secgroup"
 }
  
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_all_out" {
@@ -328,13 +327,13 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_10250_in" {
 
 # ssh key part
 resource "opentelekomcloud_compute_keypair_v2" "k3s-server-key" {
-  name       = "k3s-server-key"
+  name       = "$var.environment}-key"
   public_key = var.public_key
 }
 
 # ECS part (instances)
 resource "opentelekomcloud_compute_instance_v2" "k3s-server-1" {
-  name              = "k3s-server-1"
+  name              = "$var.environment}-server-1"
   availability_zone = var.availability_zone1
   flavor_id         = var.flavor_id
   key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
@@ -354,7 +353,7 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-1" {
 }
 
 resource "opentelekomcloud_compute_instance_v2" "k3s-server-2" {
-  name              = "k3s-server-2"
+  name              = "$var.environment}-server-2"
   availability_zone = var.availability_zone2
   flavor_id         = var.flavor_id
   key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
