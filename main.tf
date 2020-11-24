@@ -327,7 +327,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_10250_in" {
 
 # ssh key part
 resource "opentelekomcloud_compute_keypair_v2" "k3s-server-key" {
-  name       = "{$var.environment}-key"
+  name       = "${var.environment}-key"
   public_key = var.public_key
 }
 
