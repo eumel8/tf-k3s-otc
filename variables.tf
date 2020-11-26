@@ -174,3 +174,17 @@ variable "admin_email" {
   description = "Admin email address for DNS and LetsEncrypt"
   default     = "nobody@example.com"
 }
+
+####################
+# K3S/K8S vars
+####################
+
+variable "k3s_version" {
+  description = "K3S install version or channel, e.g stable/latest, v1.17.13+k3s2"
+  default     = "stable"
+}
+
+variable "cert-manager_version" {
+  description = "Cert-Manager chart version"
+  default     = "v1.0.1"
+}

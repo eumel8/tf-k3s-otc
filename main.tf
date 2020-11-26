@@ -228,23 +228,27 @@ resource "opentelekomcloud_dns_recordset_v2" "public_record" {
 data "template_file" "k3s_server" {
   template = file("${path.module}/files/k3s_server")
   vars = {
-    rds_root_password = var.rds_root_password
-    rds_db            = var.rds_db
-    rds_port          = var.rds_port
-    rds_host          = opentelekomcloud_rds_instance_v3.rds.private_ips.0
-    admin_email       = var.admin_email
-    rancher_host      = var.rancher_host
-    rancher_domain    = var.rancher_domain
+    rds_root_password    = var.rds_root_password
+    rds_db               = var.rds_db
+    rds_port             = var.rds_port
+    rds_host             = opentelekomcloud_rds_instance_v3.rds.private_ips.0
+    admin_email          = var.admin_email
+    rancher_host         = var.rancher_host
+    rancher_domain       = var.rancher_domain
+    k3s_version          = var.k3s_version
+    cert-manager_version = var.cert-manager_version
   }
 }
 
 data "template_file" "k3s_node" {
   template = file("${path.module}/files/k3s_node")
   vars = {
-    rds_root_password = var.rds_root_password
-    rds_db            = var.rds_db
-    rds_port          = var.rds_port
-    rds_host          = opentelekomcloud_rds_instance_v3.rds.private_ips.0
+    rds_root_password    = var.rds_root_password
+    rds_db               = var.rds_db
+    rds_port             = var.rds_port
+    rds_host             = opentelekomcloud_rds_instance_v3.rds.private_ips.0
+    k3s_version          = var.k3s_version
+    cert-manager_version = var.cert-manager_version
   }
 }
 
