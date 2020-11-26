@@ -35,4 +35,8 @@ for i in 1 2 3 4 5; do
 done
 
 # install k3s with MySQL backend
-curl -svfL4 --retry 100 https://get.k3s.io | sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}"
+if [ "${k3s_version}" == "latest" ] || [ "${k3s_version}" == "stable" ]; then
+  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}"
+else
+  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_VERSION=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}"
+fi
