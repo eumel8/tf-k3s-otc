@@ -1,10 +1,7 @@
 tf-k3s-otc
 ==========
 
-Scalr-Branch: install infrastructure beside ECS
------------------------------------------------
-
-[![Install Rancher on top of K3S on OTC with Terraform](https://i9.ytimg.com/vi_webp/hP2dJa64ArY/mqdefault.webp?time=1604136600000&sqp=CJjd9PwF&rs=AOn4CLBk8Oj2DKeqDqGxcW4pr79as04uEg)](http://www.youtube.com/watch?v=hP2dJa64ArY "Install Rancher on top of K3S on OTC with Terraform")
+[![Install Rancher on top of K3S on OTC with Terraform](https://i9.ytimg.com/vi_webp/hP2dJa64ArY/mqdefault.webp?time=1606254900000&sqp=CLSC9v0F&rs=AOn4CLCj9wWK0kcgBC5CHERXLyNXFjLjkA)](http://www.youtube.com/watch?v=hP2dJa64ArY "Install Rancher on top of K3S on OTC with Terraform")
 
 
 Deploy [K3S](https://k3s.io) with Terraform on Open Telekom Cloud (OTC)
