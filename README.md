@@ -81,6 +81,22 @@ terraform plan
 terraform apply
 ```
 
+Upgrades:
+---------
+
+It's possible to change the k3s_version variable and apply again with Terraform.
+All VMs will be replaced because of the changed data content. Information are stored
+in the database, so ground work should work out.
+Better way is to use the [Rancher K3S Automatic Upgrade Procedure](https://rancher.com/docs/k3s/latest/en/upgrades/automated/)
+
+There are 2 scripts to apply (adjust K3S Version first, based on the [Release Plan](https://github.com/rancher/k3s/releases)
+
+```
+kubectl apply -f k3s-upgrade-server.yaml
+kubectl apply -f k3s-upgrade-agent.yaml
+```
+
+
 Retirement:
 -----------
 
