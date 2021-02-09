@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive
 # install mysql-client (retry if network is not ready
 for i in 1 2 3 4 5; do
   apt update && break || sleep 10;
