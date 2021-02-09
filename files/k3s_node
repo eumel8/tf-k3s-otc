@@ -1,13 +1,11 @@
 #!/bin/bash -xe
 
-DEBIAN_FRONTEND=noninteractive
-
 # install mysql-client (retry if network is not ready
 for i in 1 2 3 4 5; do
   apt-get update && break || sleep 10;
 done
-apt-get -yq upgrade
-apt-get -yq install mysql-client
+DEBIAN_FRONTEND=noninteractive apt-get -yq -o Dpkg::Options::="--force-confdef" upgrade
+DEBIAN_FRONTEND=noninteractive apt-get -yq -o Dpkg::Options::="--force-confdef" install mysql-client
 
 # doing os hardening
 # https://github.com/dev-sec/puppet-os-hardening
