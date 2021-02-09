@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-export DEBIAN_FRONTEND=noninteractive
+DEBIAN_FRONTEND=noninteractive
 
 # disable non-working ipv6 in OTC ECS
 sysctl -w net.ipv6.conf.all.disable_ipv6=1
@@ -11,8 +11,8 @@ sysctl -w net.ipv6.conf.lo.disable_ipv6=1
 for i in 1 2 3 4 5; do
   apt-get update && break || sleep 10;
 done
-apt-get -y upgrade
-apt-get -y install mysql-client
+apt-get -yq upgrade
+apt-get -yq install mysql-client
 for i in 1 2 3 4 5; do
   mysql -uroot -P${rds_port} -h${rds_host} -p${rds_root_password} -e "CREATE DATABASE IF NOT EXISTS ${rds_db}" && break || sleep 10;
 done
@@ -24,7 +24,7 @@ dpkg -i puppet-release-focal.deb || exit 1
 rm -f puppet-release-focal.deb
 
 apt-get update
-apt-get install -y puppet-agent
+apt-get -yq install puppet-agent
 
 systemctl stop puppet
 systemctl disable puppet
