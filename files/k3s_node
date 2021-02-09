@@ -3,10 +3,10 @@
 export DEBIAN_FRONTEND=noninteractive
 # install mysql-client (retry if network is not ready
 for i in 1 2 3 4 5; do
-  apt update && break || sleep 10;
+  apt-get update && break || sleep 10;
 done
-apt -y upgrade
-apt -y install mysql-client
+apt-get -y upgrade
+apt-get -y install mysql-client
 
 # doing os hardening
 # https://github.com/dev-sec/puppet-os-hardening
@@ -15,8 +15,8 @@ wget https://apt.puppetlabs.com/puppet-release-focal.deb
 dpkg -i puppet-release-focal.deb || exit 1
 rm -f puppet-release-focal.deb
 
-apt update
-apt install -y puppet-agent
+apt-get update
+apt-get install -y puppet-agent
 
 systemctl stop puppet
 systemctl disable puppet
