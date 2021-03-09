@@ -358,6 +358,7 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-1" {
 }
 
 resource "opentelekomcloud_compute_instance_v2" "k3s-server-2" {
+  depends_on        = [ opentelekomcloud_compute_instance_v2.k3s-server-1 ]
   name              = "${var.environment}-server-2"
   availability_zone = var.availability_zone2
   flavor_id         = var.flavor_id
