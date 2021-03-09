@@ -186,7 +186,7 @@ variable "k3s_version" {
 
 variable "cert-manager_version" {
   description = "Cert-Manager chart version"
-  default     = "v1.0.1"
+  default     = "v1.2.0"
 }
 
 ####################
@@ -195,5 +195,5 @@ variable "cert-manager_version" {
 
 variable "rancher_version" {
   description = "Version of Rancher app"
-  default     = "v2.5.5"
+  default     = "v2.5.6"
 }

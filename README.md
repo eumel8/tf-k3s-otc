@@ -97,6 +97,40 @@ kubectl apply -f k3s/k3s-upgrade-server.yaml
 kubectl apply -f k3s/k3s-upgrade-agent.yaml
 ```
 
+Rancher can upgrade manually:
+
+```
+helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
+helm repo update
+helm -n cattle-system upgrade -i rancher rancher-latest/rancher
+  --set hostname=rancher.example.com \
+  --set ingress.tls.source=letsEncrypt \
+  --set letsEncrypt.email=nobody@example.com \
+  --set letsEncrypt.ingress.class=traefik \
+  --set replicas=2 \
+  --version v2.5.6 
+```
+
+Cert-Manager as well:
+
+```
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm -n cert-manager upgrade -i cert-manager jetstack/cert-manager \
+    --version v1.2.0
+```
+
+OS-Upgrade (i.e. Kernel/new image) can be done in the following way:
+
+```
+terraform taint opentelekomcloud_compute_instance_v2.k3s-server-1
+terraform plan
+```
+
+This will replace k3s-server-1 with a new instance.
+
+Note: this will also upgrade/downgrad the defined version of Rancher and Cert-Manager
+
 
 Retirement:
 -----------
