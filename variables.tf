@@ -135,7 +135,12 @@ variable "availability_zone3" {
   default     = "eu-de-03"
 }
 
-variable "image_name" {
+variable "image_name_server-1" {
+  description = "Name of the image"
+  default     = "Standard_Ubuntu_20.04_latest"
+}
+
+variable "image_name_server-2" {
   description = "Name of the image"
   default     = "Standard_Ubuntu_20.04_latest"
 }

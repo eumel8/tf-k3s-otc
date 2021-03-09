@@ -253,8 +253,13 @@ data "template_file" "k3s_node" {
   }
 }
 
-data "opentelekomcloud_images_image_v2" "image" {
-  name        = var.image_name
+data "opentelekomcloud_images_image_v2" "image-1" {
+  name        = var.image_name_server-1
+  most_recent = true
+}
+
+data "opentelekomcloud_images_image_v2" "image-2" {
+  name        = var.image_name_server-2
   most_recent = true
 }
  
@@ -351,7 +356,7 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-1" {
     boot_index            = 0
     source_type           = "image"
     destination_type      = "volume"
-    uuid                  = data.opentelekomcloud_images_image_v2.image.id
+    uuid                  = data.opentelekomcloud_images_image_v2.image-1.id
     delete_on_termination = true
     volume_size           = 30
   }
@@ -371,7 +376,7 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-2" {
     boot_index            = 0
     source_type           = "image"
     destination_type      = "volume"
-    uuid                  = data.opentelekomcloud_images_image_v2.image.id
+    uuid                  = data.opentelekomcloud_images_image_v2.image-2.id
     delete_on_termination = true
     volume_size           = 30
   }
