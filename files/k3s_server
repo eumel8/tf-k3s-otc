@@ -17,7 +17,9 @@ done
 
 # doing os hardening
 # https://github.com/dev-sec/puppet-os-hardening
-wget https://apt.puppetlabs.com/puppet-release-focal.deb
+for i in 1 2 3 4 5; do
+  wget https://apt.puppetlabs.com/puppet-release-focal.deb || sleep 10;
+done
 dpkg -i puppet-release-focal.deb || exit 1
 rm -f puppet-release-focal.deb
 
@@ -79,6 +81,7 @@ for i in 1 2 3 4 5; do
     --set letsEncrypt.email=${admin_email} \
     --set letsEncrypt.ingress.class=traefik \
     --set replicas=2 \
+    --version ${rancher_version} \
     --wait --timeout 10m0s \
     --create-namespace && break || sleep 60;
 done

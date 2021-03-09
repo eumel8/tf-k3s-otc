@@ -188,3 +188,12 @@ variable "cert-manager_version" {
   description = "Cert-Manager chart version"
   default     = "v1.0.1"
 }
+
+####################
+# Rancher vars
+####################
+
+variable "rancher_version" {
+  description = "Version of Rancher app"
+  default     = "v2.5.5"
+}

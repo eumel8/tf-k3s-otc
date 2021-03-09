@@ -235,6 +235,7 @@ data "template_file" "k3s_server" {
     admin_email          = var.admin_email
     rancher_host         = var.rancher_host
     rancher_domain       = var.rancher_domain
+    rancher_version      = var.rancher_version
     k3s_version          = var.k3s_version
     cert-manager_version = var.cert-manager_version
   }
