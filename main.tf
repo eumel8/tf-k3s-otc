@@ -275,23 +275,13 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_all_out" {
   security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
  
-resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_22_in" {
-  direction         = "ingress"
-  ethertype         = "IPv4"
-  protocol          = "tcp"
-  port_range_min    = 22
-  port_range_max    = 22
-  remote_ip_prefix  = "0.0.0.0/0"
-  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
-}
-
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_80_in" {
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
   port_range_min    = 80
   port_range_max    = 80
-  remote_ip_prefix  = "0.0.0.0/0"
+  remote_ip_prefix  = "100.125.0.0/16"
   security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
  
@@ -301,7 +291,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_443_in" {
   protocol          = "tcp"
   port_range_min    = 443
   port_range_max    = 443
-  remote_ip_prefix  = "0.0.0.0/0"
+  remote_ip_prefix  = "100.125.0.0/16"
   security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
  
@@ -311,7 +301,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in" {
   protocol          = "tcp"
   port_range_min    = 6443
   port_range_max    = 6443
-  remote_ip_prefix  = "0.0.0.0/0"
+  remote_ip_prefix  = "100.125.0.0/16"
   security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
@@ -322,7 +312,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_8472_in" {
   port_range_min    = 8472
   port_range_max    = 8472
   remote_ip_prefix  = "0.0.0.0/0"
- security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_10250_in" {
@@ -331,7 +321,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_10250_in" {
   protocol          = "tcp"
   port_range_min    = 10250
   port_range_max    = 10250
-  remote_ip_prefix  = "0.0.0.0/0"
+  remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
   security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
@@ -347,7 +337,7 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-1" {
   availability_zone = var.availability_zone1
   flavor_id         = var.flavor_id
   key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
-  security_groups   = [opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id]
+  security_groups   = ["${var.environment}-secgroup"]
   user_data         = data.template_file.k3s_server.rendered
   network {
     uuid = opentelekomcloud_vpc_subnet_v1.subnet.id
@@ -367,7 +357,7 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-2" {
   availability_zone = var.availability_zone2
   flavor_id         = var.flavor_id
   key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
-  security_groups   = [opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id]
+  security_groups   = ["${var.environment}-secgroup"]
   user_data         = data.template_file.k3s_node.rendered
   network {
     uuid = opentelekomcloud_vpc_subnet_v1.subnet.id
