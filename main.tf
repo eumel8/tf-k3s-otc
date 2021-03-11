@@ -294,6 +294,16 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_443_in" {
   remote_ip_prefix  = "100.125.0.0/16"
   security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
+
+resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_443_in_self" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 443
+  port_range_max    = 443
+  remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+}
  
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in" {
   direction         = "ingress"
@@ -302,6 +312,16 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in" {
   port_range_min    = 6443
   port_range_max    = 6443
   remote_ip_prefix  = "100.125.0.0/16"
+  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+}
+
+resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in_self" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 6443
+  port_range_max    = 6443
+  remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
   security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
