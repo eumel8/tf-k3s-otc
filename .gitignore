@@ -1,4 +1,6 @@
 .terraform
+.terraform.lock.hcl
+terraform.state*
 terraform.tfstate*
 terraform.tfvars
 s3/.terraform
