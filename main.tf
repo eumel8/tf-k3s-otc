@@ -72,27 +72,39 @@ resource "opentelekomcloud_lb_pool_v2" "pool_6443" {
 }
  
 resource "opentelekomcloud_lb_monitor_v2" "monitor_80" {
-  pool_id     = opentelekomcloud_lb_pool_v2.pool_80.id
-  type        = "TCP"
-  delay       = 20
-  timeout     = 10
-  max_retries = 5
+  pool_id        = opentelekomcloud_lb_pool_v2.pool_80.id
+  type           = "HTTP"
+  delay          = 10
+  timeout        = 5
+  max_retries    = 10
+  url_path       = "/ping"
+  http_method    = "GET"
+  expected_codes = "200"
+  monitor_port   = 80
 }
 
 resource "opentelekomcloud_lb_monitor_v2" "monitor_443" {
-  pool_id     = opentelekomcloud_lb_pool_v2.pool_443.id
-  type        = "TCP"
-  delay       = 20
-  timeout     = 10
-  max_retries = 5
+  pool_id        = opentelekomcloud_lb_pool_v2.pool_443.id
+  type           = "HTTP"
+  delay          = 10
+  timeout        = 5
+  max_retries    = 10
+  url_path       = "/ping"
+  http_method    = "GET"
+  expected_codes = "200"
+  monitor_port   = 80
 }
  
 resource "opentelekomcloud_lb_monitor_v2" "monitor_6443" {
-  pool_id     = opentelekomcloud_lb_pool_v2.pool_6443.id
-  type        = "TCP"
-  delay       = 20
-  timeout     = 10
-  max_retries = 5
+  pool_id        = opentelekomcloud_lb_pool_v2.pool_6443.id
+  type           = "HTTP"
+  delay          = 10
+  timeout        = 5
+  max_retries    = 10
+  url_path       = "/ping"
+  http_method    = "GET"
+  expected_codes = "200"
+  monitor_port   = 80
 }
 
 # server 1
