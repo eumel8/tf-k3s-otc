@@ -2,7 +2,7 @@ terraform {
   required_providers {
     opentelekomcloud = {
       source  = "opentelekomcloud/opentelekomcloud"
-      version = "1.20.2"
+      version = ">=1.23"
     }
     template = {
       source = "hashicorp/template"
