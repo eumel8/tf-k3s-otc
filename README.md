@@ -213,6 +213,29 @@ cattle-system   cattle-node-agent-f4nc5                    1/1     Running     0
 kube-system     svclb-traefik-rfwgh                        2/2     Running     0          6m56s
 ```
 
+Migration from RKE Cluster
+--------------------------
+
+The procedure is described in [Rancher docs](https://rancher.com/docs/rancher/v2.x/en/backups/v2.5/migrating-rancher/)
+
+note: as mentioned Rancher version 2.5+ is needed.
+
+working steps:
+
+   * Upgrade Rancher 2.5+
+   * Install [rancher-backup](https://rancher.com/docs/rancher/v2.x/en/backups/v2.5/#installing-rancher-backup-with-the-helm-cli)
+   * Perform etcd backup
+   * Perform S3 backup
+   * Create Git Repo for new Raseed environment in a CI/CD pipeline
+   * Shutdown old public endpoint (cluster agents of downstream cluster should disconnect)
+   * Switch DNS entry of public endpoint (if no automation like external-dns is used)
+   * Execute created CI/CD Pipeline for environment
+   * Login into RancherUI of the new environment
+   * Install rancher-backup
+   * Restore S3 backup
+   * Review downstream clusters
+
+
 Credits:
 -------
 
