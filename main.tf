@@ -371,6 +371,7 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-1" {
   key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
   security_groups   = ["${var.environment}-secgroup"]
   user_data         = data.template_file.k3s_server.rendered
+  power_state       = var.power_state
   network {
     uuid = opentelekomcloud_vpc_subnet_v1.subnet.id
   }
@@ -391,6 +392,7 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-2" {
   key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
   security_groups   = ["${var.environment}-secgroup"]
   user_data         = data.template_file.k3s_node.rendered
+  power_state       = var.power_state
   network {
     uuid = opentelekomcloud_vpc_subnet_v1.subnet.id
   }

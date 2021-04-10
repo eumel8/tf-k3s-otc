@@ -155,6 +155,11 @@ variable "public_key" {
   default     = ""
 }
 
+variable "power_state" {
+  description = "Power state of ECS instances"
+  default     = "active"
+}
+
 ####################
 # DNS vars
 ####################

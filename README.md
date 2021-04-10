@@ -115,6 +115,8 @@ helm -n cattle-system upgrade -i rancher rancher-latest/rancher
   --version v2.5.6 
 ```
 
+Note: Rancher upgrade via Rancher API will often fail due the Rancher pod restarts during upgrade
+
 Cert-Manager as well:
 
 ```
@@ -135,6 +137,23 @@ This will replace k3s-server-1 with a new instance.
 
 Note: this will also upgrade/downgrad the defined version of Rancher and Cert-Manager
 
+
+Shutdown-Mode
+-------------
+
+Since Version 1.23.6 Terraform Open Telekom Cloud can handle ECS instance power state.
+
+Shutoff:
+
+```
+terraform apply -auto-approve --var power_state=shutoff
+```
+
+Active:
+
+```
+terraform apply -auto-approve --var power_state=active
+```
 
 Retirement:
 -----------
