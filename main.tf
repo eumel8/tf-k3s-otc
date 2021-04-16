@@ -9,11 +9,12 @@ resource "opentelekomcloud_vpc_v1" "vpc" {
 }
 
 resource "opentelekomcloud_vpc_subnet_v1" "subnet" {
-  name       = var.environment
-  vpc_id     = opentelekomcloud_vpc_v1.vpc.id
-  cidr       = var.subnet_cidr
-  gateway_ip = var.subnet_gateway_ip
-  dns_list   = [ "100.125.4.25", "100.125.129.199" ]
+  name          = var.environment
+  vpc_id        = opentelekomcloud_vpc_v1.vpc.id
+  cidr          = var.subnet_cidr
+  gateway_ip    = var.subnet_gateway_ip
+  primary_dns   = var.subnet_primary_dns
+  secondary_dns = var.subnet_secondary_dns
 }
 
 ########### 

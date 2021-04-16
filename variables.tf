@@ -61,6 +61,16 @@ variable "subnet_gateway_ip" {
   default     = "10.1.0.1"
 }
 
+variable "subnet_primary_dns" {
+  description = "Primary DNS server of the Subnet"  
+  default     = "100.125.4.25"
+}
+
+variable "subnet_secondary_dns" {
+  description = "Secondary DNS server of the Subnet"  
+  default     = "100.125.129.199"
+}
+
 ####################
 # RDS vars
 ####################
