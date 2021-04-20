@@ -81,6 +81,9 @@ for i in 1 2 3 4 5; do
     --set letsEncrypt.email=${admin_email} \
     --set letsEncrypt.ingress.class=traefik \
     --set replicas=2 \
+    --set auditLog.level=2 \
+    --set systemDefaultRegistry=mtr.external.otc.telekomcloud.com \
+    --set busyboxImage=mtr.external.otc.telekomcloud.com/mcsps/busybox:latest \
     --version ${rancher_version} \
     --wait --timeout 10m0s \
     --create-namespace && break || sleep 60;
