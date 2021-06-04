@@ -278,10 +278,12 @@ data "opentelekomcloud_images_image_v2" "image-2" {
  
 # Secgroup part (ECS)
 resource "opentelekomcloud_networking_secgroup_v2" "k3s-server-secgroup" {
-  name = "${var.environment}-secgroup"
+  description = "K3S Server Group"
+  name        = "${var.environment}-secgroup"
 }
  
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_all_out" {
+  description       = "Rancher/K3S accept all traffic"
   direction         = "egress"
   ethertype         = "IPv4"
   remote_ip_prefix  = "0.0.0.0/0"
@@ -289,6 +291,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_all_out" {
 }
  
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_80_in" {
+  description       = "Rancher HTTP ELB network"
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
@@ -299,6 +302,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_80_in" {
 }
  
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_443_in" {
+  description       = "Rancher HTTPS ELB network"
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
@@ -309,6 +313,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_443_in" {
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_443_in_self" {
+  description       = "Rancher HTTPS internal"
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
@@ -319,6 +324,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_443_in_self" {
 }
  
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in" {
+  description       = "Kube API ELB network"
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
@@ -329,6 +335,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in" {
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in_self" {
+  description       = "Kube API internal"
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
@@ -339,6 +346,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in_self" {
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_8472_in" {
+  description       = "Flannel VXLAN"
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "udp"
@@ -360,6 +368,7 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_9796_in" {
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_10250_in" {
+  description       = "Kubelet"
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
