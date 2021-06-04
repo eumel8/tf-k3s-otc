@@ -348,6 +348,17 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_8472_in" {
   security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
+resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_9796_in" {
+  description       = "Prometheus Node Exporter"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 9796
+  port_range_max    = 9796
+  remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+}
+
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_10250_in" {
   direction         = "ingress"
   ethertype         = "IPv4"
