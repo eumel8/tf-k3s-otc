@@ -72,61 +72,6 @@ variable "subnet_secondary_dns" {
 }
 
 ####################
-# RDS vars
-####################
-
-variable "rds_root_password" {
-  description = "RDS Root Password"  
-  default     = ""
-}
-
-variable "rds_type" {
-  description = "RDS Type"  
-  default     = "MySQL"
-}
-
-variable "rds_version" {
-  description = "Version of RDS"
-  default     = "8.0"
-}
-
-variable "rds_port" {
-  description = "Port of RDS"
-  default     = "3306"
-}
-
-variable "rds_az" {
-  description = "Availability zones of RDS (minimum 2)"
-  default     = ["eu-de-01" , "eu-de-02"]
-}
-
-variable "rds_volume_type" {
-  description = "Volume type of RDS (COMMON or ULTRAHIGH)"
-  default     = "COMMON"
-}
-
-variable "rds_volume_size" {
-  description = "Volume size of RDS in GB (40 minimum)"
-  default     = "40"
-}
-
-variable "rds_flavor" {
-  description = "Flavor of RDS"
-  default     = "rds.mysql.c2.medium.ha"
-}
-
-variable "rds_ha_mode" {
-  description = "Use HA RDS service"
-  type        = string
-  default     = "async" # or 'null' in non-ha
-}
-
-variable "rds_db" {
-  description = "Name of the RDS schema"
-  default     = "k3s"
-}
-
-####################
 # ECS vars
 ####################
 
