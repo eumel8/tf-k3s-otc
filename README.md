@@ -15,6 +15,9 @@ with the following resources:
 * ECS (2 master nodes Ubuntu 20.04)
 * DNS (existing zone can be import with `terraform import opentelekomcloud_dns_zone_v2.dns <zone_id>`
 
+Interested in [RKE2](https://docs.rke2.io)? Refer to the [rke2 branch](https://github.com/eumel8/tf-k3s-otc/tree/rke2) with
+a full deployment of Kubernetes Cluster with RKE2 backend. This deployment has an etcd instead RDS as data backend.
+
 Rancher:
 --------
 
