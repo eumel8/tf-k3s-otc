@@ -1,0 +1,77 @@
+#!/bin/bash -xe
+
+# upgrade os (retry if network is not ready)
+for i in 1 2 3 4 5; do
+  apt-get update && break || sleep 10;
+done
+DEBIAN_FRONTEND=noninteractive apt-get -yq -o Dpkg::Options::="--force-confdef" upgrade
+
+# doing os hardening
+# https://github.com/dev-sec/puppet-os-hardening
+
+wget https://apt.puppetlabs.com/puppet-release-focal.deb
+dpkg -i puppet-release-focal.deb || exit 1
+rm -f puppet-release-focal.deb
+
+apt-get update
+apt-get -yq install puppet-agent
+
+systemctl stop puppet
+systemctl disable puppet
+/opt/puppetlabs/bin/puppet module install hardening-os_hardening || exit 1
+
+cat > hardening.pp << EOF
+class { 'os_hardening':
+  enable_ipv4_forwarding => true,
+}
+EOF
+
+/opt/puppetlabs/bin/puppet apply hardening.pp || exit 1
+rm -f hardening.pp
+
+# prepare rke2 ha config
+mkdir -p /etc/rancher/rke2
+cat > /etc/rancher/rke2/config.yaml << EOF
+server: https://${rancher_host}.${rancher_domain}:9345
+token: ${token}
+tls-san:
+  - ${rancher_host}.${rancher_domain}
+# node-taint:
+#  - "CriticalAddonsOnly=true:NoExecute"
+EOF
+
+# install rke2 with etcd backend
+if [ "${rke2_version}" == "latest" ] || [ "${rke2_version}" == "stable" ]; then
+  curl -svfL4 --retry 100 https://get.rke2.io | INSTALL_RKE2_CHANNEL=${rke2_version} sh -
+else
+  curl -svfL4 --retry 100 https://get.rke2.io | INSTALL_RKE2_VERSION=${rke2_version} sh -
+fi
+
+# start rke2
+systemctl enable rke2-server.service
+systemctl start rke2-server.service
+
+# extend env vars
+cat >> /root/.bashrc << EOF
+export KUBECONFIG=/etc/rancher/rke2/rke2.yaml
+export PATH=$PATH:/var/lib/rancher/rke2/bin/
+source  <(/var/lib/rancher/rke2/bin/kubectl completion bash)
+EOF
+
+# while join cluster
+while [ ! -f  /var/lib/rancher/rke2/bin/kubectl ] ; do
+  sleep 10
+  echo "wait for kubectl"
+done
+
+export KUBECONFIG=/etc/rancher/rke2/rke2.yaml
+export PATH=$PATH:/var/lib/rancher/rke2/bin/
+
+while (( node_status < 1 )) ; do
+  echo "wait for k8s is ready"
+  systemctl stop rke2-server.service
+  sleep 60
+  systemctl start rke2-server.service
+  sleep 30
+  node_status=$(/var/lib/rancher/rke2/bin/kubectl get nodes | grep -i ready | wc -l)
+done

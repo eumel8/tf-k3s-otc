@@ -3,7 +3,7 @@
 ####################
 
 variable "environment" {
-  default = "k3s-test"
+  default = "rke2-test"
 }
 
 ####################
@@ -141,17 +141,22 @@ variable "admin_email" {
 }
 
 ####################
-# K3S/K8S vars
+# RKE2S/K8S vars
 ####################
 
-variable "k3s_version" {
-  description = "K3S install version or channel, e.g stable/latest, v1.17.13+k3s2"
+variable "rke2_version" {
+  description = "RKE2 install version or channel, e.g stable/latest, v1.20.7+rke2r2"
   default     = "stable"
 }
 
 variable "cert-manager_version" {
   description = "Cert-Manager chart version"
-  default     = "v1.2.0"
+  default     = "v1.3.1"
+}
+
+variable "token" {
+  description = "RKE Server Token"
+  default     = "12345678"
 }
 
 ####################
