@@ -266,6 +266,18 @@ data "template_file" "k3s_node" {
   }
 }
 
+data "template_file" "wireguard" {
+  template = file("${path.module}/files/wireguard")
+  vars = {
+    wg_server_address     = var.wg_server_address
+    wg_server_port        = var.wg_server_port
+    wg_server_private_key = var.wg_server_private_key
+    wg_server_public_key  = var.wg_server_public_key
+    wg_peer_address       = var.wg_peer_address
+    wg_peer_public_key    = var.wg_peer_public_key
+  }
+}
+
 data "opentelekomcloud_images_image_v2" "image-1" {
   name        = var.image_name_server-1
   most_recent = true
@@ -425,6 +437,39 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-2" {
     delete_on_termination = true
     volume_size           = 30
   }
+}
+
+resource "opentelekomcloud_compute_instance_v2" "wireguard" {
+  count             = var.deploy_wireguard ? 1 : 0
+  name              = "${var.environment}-wireguard"
+  availability_zone = var.availability_zone1
+  flavor_id         = var.flavor_id
+  key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
+  security_groups   = ["${var.environment}-secgroup-wg"]
+  user_data         = data.template_file.wireguard.rendered
+  power_state       = var.power_state
+  network {
+    uuid = opentelekomcloud_vpc_subnet_v1.subnet.id
+  }
+  block_device {
+    boot_index            = 0
+    source_type           = "image"
+    destination_type      = "volume"
+    uuid                  = data.opentelekomcloud_images_image_v2.image-1.id
+    delete_on_termination = true
+    volume_size           = 30
+  }
+}
+
+resource "opentelekomcloud_networking_floatingip_v2" "wireguard" {
+  count = var.deploy_wireguard ? 1 : 0
+  pool  = "admin_external_net"
+}
+
+resource "opentelekomcloud_compute_floatingip_associate_v2" "wireguard" {
+  count       = var.deploy_wireguard ? 1 : 0
+  floating_ip = opentelekomcloud_networking_floatingip_v2.wireguard[0].address
+  instance_id = opentelekomcloud_compute_instance_v2.wireguard[0].id
 }
  
 # MySQL part (needs to be run in VPC)

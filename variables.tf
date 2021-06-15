@@ -170,6 +170,42 @@ variable "power_state" {
   default     = "active"
 }
 
+variable "deploy_wireguard" {
+  description = "Deploy a Wireguard Server to access the internal network"
+  default     = false
+  type        = bool
+} 
+
+variable "wg_server_address" {
+  description = "Ip address of the Wireguard Server"
+  default     = "10.2.0.1/24"
+}
+
+variable "wg_server_port" {
+  description = "Port  of the Wireguard Server"
+  default     = "51820"
+}
+
+variable "wg_server_private_key" {
+  description = "Wireguard Server Private Key"
+  default = ""
+}
+
+variable "wg_server_public_key" {
+  description = "Wireguard Server Public Key"
+  default = ""
+}
+
+variable "wg_peer_address" {
+  description = "Wireguard Server Public Key"
+  default = "10.2.0.2/24"
+}
+
+variable "wg_peer_public_key" {
+  description = "Wireguard Peer Public Key"
+  default = ""
+}
+
 ####################
 # DNS vars
 ####################

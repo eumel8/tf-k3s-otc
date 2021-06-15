@@ -1,0 +1,32 @@
+#!/bin/sh
+# Wireguard Installer Ubuntu 20.04
+#
+# Looking for clients: https://www.wireguard.com/install/
+#
+echo "01 Enable IP-Forwarding"
+sysctl net.ipv4.ip_forward=1
+echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/99-ipv4-forward.conf
+#
+echo "02 Install packages 20.04"
+apt update
+apt install -y wireguard-dkms wireguard-tools
+#
+echo "03 Copy Wireguard Config"
+cat > /etc/wireguard/wg0.conf <<EOF
+[Interface]
+Address = ${wg_server_address}
+ListenPort = ${wg_server_port}
+Privatekey = ${wg_server_private_key}
+
+PostUp   = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o ens3 -j MASQUERADE
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o ens3 -j MASQUERADE
+
+[Peer]
+PublicKey = ${wg_peer_public_key}
+AllowedIPs = ${wg_peer_address}
+
+EOF
+#
+echo "04 Start Wireguard"
+systemctl enable wg-quick@wg0.service
+wg-quick up wg0
