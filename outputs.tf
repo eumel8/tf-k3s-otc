@@ -13,3 +13,7 @@ output "wireguard-server-port" {
 output "wireguard-server-key" {
   value = var.deploy_wireguard ? var.wg_server_public_key : null
 }
+
+output "k3s-nodes" {
+  value = [opentelekomcloud_compute_instance_v2.k3s-server-1.access_ip_v4, opentelekomcloud_compute_instance_v2.k3s-server-2.access_ip_v4]
+}

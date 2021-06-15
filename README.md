@@ -165,6 +165,66 @@ Retirement:
 terraform destroy
 ```
 
+Wireguard:
+----------
+
+In this deployment model there is no access with ssh to the nodes.
+We can extend the deployment with a [Wireguard](https://www.wireguard.com) service
+to create a vpn tunnel to access the internal network. There are multiple [clients](https://www.wireguard.com/install/)
+(also for Windows).
+
+At first it's required to install wireguard-tools and generate a keypair
+for the Wireguard server:
+
+```
+sudo apt install -y wireguard-dkms wireguard-tools
+wg genkey | tee privatekey | wg pubkey > publickey
+```
+
+Activate Wireguard deployment and put the content of the generated key
+into terraform.tfvars:
+
+```
+deploy_wireguard    = "true"
+wg_server_public_key = "8EPWNuwv5vldRuLX4RNds/U78a8g2kTctNHRBClHTC4="
+wg_server_private_key = "cNyppGTX8gwWLTRxxrNYfiRqTEjJSCMlBT+TbcEGAl8="
+wg_peer_public_key = "9tjOb+VA7vCHQj2rcOBSln8U7tVXzeEoBITYVuq1LFw="
+```
+
+Repeat key generating with the commands above or with the Wireguard client.
+Add the public key into terraform.tfvars:
+
+```
+wg_peer_public_key = "9tjOb+VA7vCHQj2rcOBSln8U7tVXzeEoBITYVuq1LFw="
+```
+
+Deploy with `terraform plan` & `terraform apply`
+
+Client configuration example:
+
+```
+[Interface]
+PrivateKey = 0ITNzekaBeanMGefS7iyS2hsgzGK50GOpF6NKHoPPwF8=
+ListenPort = 51820
+Address = 10.2.0.2/24
+
+[Peer]
+PublicKey = 3dgEPWNuwv5vldRuLX4RNdshsg78a8g2kTctNHRBClHTC4=
+AllowedIPs = 10.2.0.1/32, 10.1.0.0/24, 80.158.6.126/32
+Endpoint = 80.158.6.126:51820
+```
+
+* 10.2.0.1: Wireguard Server IP
+* 10.2.0.2: Wireguard Client IP
+* 10.1.0.0: Internal K3S Network
+* 80.158.6.128: Floating IP of Wireguard Server
+
+Windows user needs a manual route:
+
+```
+route add 10.1.0.0/24 mask 255.255.255.0 10.2.0.1
+```
+
 Debug:
 ------
 
@@ -172,9 +232,7 @@ Installation take a while (10-15 min). If no service is reachable you can login
 to the first ECS instance. Most of the things should happen there in cloud-init:
 
 ```
-openstack floating ip create admin_external_net
-openstack server add floating ip  k3s-server-1 80.158.1.100
-ssh ubuntu@80.158.1.100
+ssh ubuntu@10.1.0.158
 $ sudo su -
 # tail /var/log/cloud-init-output.log
 ```
