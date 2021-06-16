@@ -266,6 +266,18 @@ data "template_file" "k3s_node" {
   }
 }
 
+data "template_file" "wireguard" {
+  template = file("${path.module}/files/wireguard")
+  vars = {
+    wg_server_address     = var.wg_server_address
+    wg_server_port        = var.wg_server_port
+    wg_server_private_key = var.wg_server_private_key
+    wg_server_public_key  = var.wg_server_public_key
+    wg_peer_address       = var.wg_peer_address
+    wg_peer_public_key    = var.wg_peer_public_key
+  }
+}
+
 data "opentelekomcloud_images_image_v2" "image-1" {
   name        = var.image_name_server-1
   most_recent = true
@@ -290,59 +302,71 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_all_out" {
   security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
  
-resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_80_in" {
-  description       = "Rancher HTTP ELB network"
+resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_22_in_self" {
+  count             = var.deploy_wireguard ? 1 : 0
+  description       = "K3S Server ssh internal"
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
-  port_range_min    = 80
-  port_range_max    = 80
-  remote_ip_prefix  = "100.125.0.0/16"
+  port_range_min    = 22
+  port_range_max    = 22
+  remote_group_id   = opentelekomcloud_networking_secgroup_v2.wireguard-secgroup[0].id
   security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
- 
+
+resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_80_in" {
+	description       = "Rancher HTTP ELB network"
+		direction         = "ingress"
+		ethertype         = "IPv4"
+		protocol          = "tcp"
+		port_range_min    = 80
+		port_range_max    = 80
+		remote_ip_prefix  = "100.125.0.0/16"
+		security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+}
+
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_443_in" {
-  description       = "Rancher HTTPS ELB network"
-  direction         = "ingress"
-  ethertype         = "IPv4"
-  protocol          = "tcp"
-  port_range_min    = 443
-  port_range_max    = 443
-  remote_ip_prefix  = "100.125.0.0/16"
-  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+	description       = "Rancher HTTPS ELB network"
+		direction         = "ingress"
+		ethertype         = "IPv4"
+		protocol          = "tcp"
+		port_range_min    = 443
+		port_range_max    = 443
+		remote_ip_prefix  = "100.125.0.0/16"
+		security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_443_in_self" {
-  description       = "Rancher HTTPS internal"
-  direction         = "ingress"
-  ethertype         = "IPv4"
-  protocol          = "tcp"
-  port_range_min    = 443
-  port_range_max    = 443
-  remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
-  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+	description       = "Rancher HTTPS internal"
+		direction         = "ingress"
+		ethertype         = "IPv4"
+		protocol          = "tcp"
+		port_range_min    = 443
+		port_range_max    = 443
+		remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+		security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
- 
+
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in" {
-  description       = "Kube API ELB network"
-  direction         = "ingress"
-  ethertype         = "IPv4"
-  protocol          = "tcp"
-  port_range_min    = 6443
-  port_range_max    = 6443
-  remote_ip_prefix  = "100.125.0.0/16"
-  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+	description       = "Kube API ELB network"
+		direction         = "ingress"
+		ethertype         = "IPv4"
+		protocol          = "tcp"
+		port_range_min    = 6443
+		port_range_max    = 6443
+		remote_ip_prefix  = "100.125.0.0/16"
+		security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in_self" {
-  description       = "Kube API internal"
-  direction         = "ingress"
-  ethertype         = "IPv4"
-  protocol          = "tcp"
-  port_range_min    = 6443
-  port_range_max    = 6443
-  remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
-  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+	description       = "Kube API internal"
+		direction         = "ingress"
+		ethertype         = "IPv4"
+		protocol          = "tcp"
+		port_range_min    = 6443
+		port_range_max    = 6443
+		remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+		security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_8472_in" {
@@ -376,6 +400,43 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_10250_in" {
   port_range_max    = 10250
   remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
   security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+}
+
+resource "opentelekomcloud_networking_secgroup_v2" "wireguard-secgroup" {
+  count       = var.deploy_wireguard ? 1 : 0
+  description = "K3S Wireguard Server"
+  name        = "${var.environment}-secgroup-wg"
+}
+ 
+resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_wg_all_out" {
+  count             = var.deploy_wireguard ? 1 : 0
+  description       = "K3S Wireguard accept all traffic"
+  direction         = "egress"
+  ethertype         = "IPv4"
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = opentelekomcloud_networking_secgroup_v2.wireguard-secgroup[0].id
+}
+ 
+resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_wg_in" {
+  count             = var.deploy_wireguard ? 1 : 0
+  description       = "K3S Wireguard"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "udp"
+  port_range_min    = var.wg_server_port
+  port_range_max    = var.wg_server_port
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = opentelekomcloud_networking_secgroup_v2.wireguard-secgroup[0].id
+}
+
+resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_icmp_in" {
+  count             = var.deploy_wireguard ? 1 : 0
+  description       = "K3S Wireguard"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "icmp"
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = opentelekomcloud_networking_secgroup_v2.wireguard-secgroup[0].id
 }
 
 # ssh key part
@@ -425,6 +486,39 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-2" {
     delete_on_termination = true
     volume_size           = 30
   }
+}
+
+resource "opentelekomcloud_compute_instance_v2" "wireguard" {
+  count             = var.deploy_wireguard ? 1 : 0
+  name              = "${var.environment}-wireguard"
+  availability_zone = var.availability_zone1
+  flavor_id         = var.flavor_id
+  key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
+  security_groups   = ["${var.environment}-secgroup-wg"]
+  user_data         = data.template_file.wireguard.rendered
+  power_state       = var.power_state
+  network {
+    uuid = opentelekomcloud_vpc_subnet_v1.subnet.id
+  }
+  block_device {
+    boot_index            = 0
+    source_type           = "image"
+    destination_type      = "volume"
+    uuid                  = data.opentelekomcloud_images_image_v2.image-1.id
+    delete_on_termination = true
+    volume_size           = 30
+  }
+}
+
+resource "opentelekomcloud_networking_floatingip_v2" "wireguard" {
+  count = var.deploy_wireguard ? 1 : 0
+  pool  = "admin_external_net"
+}
+
+resource "opentelekomcloud_compute_floatingip_associate_v2" "wireguard" {
+  count       = var.deploy_wireguard ? 1 : 0
+  floating_ip = opentelekomcloud_networking_floatingip_v2.wireguard[0].address
+  instance_id = opentelekomcloud_compute_instance_v2.wireguard[0].id
 }
  
 # MySQL part (needs to be run in VPC)
