@@ -214,7 +214,6 @@ resource "opentelekomcloud_rds_instance_v3" "rds" {
 ########### 
 # DNS part 
 ########### 
-
 resource "opentelekomcloud_dns_zone_v2" "dns" {
   count       = var.create_dns ? 1 : 0
   name        = "${var.rancher_domain}."
@@ -237,7 +236,6 @@ resource "opentelekomcloud_dns_recordset_v2" "public_record" {
 ########### 
 # ECS part
 ########### 
-
 data "template_file" "k3s_server" {
   template = file("${path.module}/files/k3s_server")
   vars = {
@@ -315,58 +313,58 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_22_in_self" {
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_80_in" {
-	description       = "Rancher HTTP ELB network"
-		direction         = "ingress"
-		ethertype         = "IPv4"
-		protocol          = "tcp"
-		port_range_min    = 80
-		port_range_max    = 80
-		remote_ip_prefix  = "100.125.0.0/16"
-		security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+  description       = "Rancher HTTP ELB network"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 80
+  port_range_max    = 80
+  remote_ip_prefix  = "100.125.0.0/16"
+  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_443_in" {
-	description       = "Rancher HTTPS ELB network"
-		direction         = "ingress"
-		ethertype         = "IPv4"
-		protocol          = "tcp"
-		port_range_min    = 443
-		port_range_max    = 443
-		remote_ip_prefix  = "100.125.0.0/16"
-		security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+  description       = "Rancher HTTPS ELB network"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 443
+  port_range_max    = 443
+  remote_ip_prefix  = "100.125.0.0/16"
+  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_443_in_self" {
-	description       = "Rancher HTTPS internal"
-		direction         = "ingress"
-		ethertype         = "IPv4"
-		protocol          = "tcp"
-		port_range_min    = 443
-		port_range_max    = 443
-		remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
-		security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+  description       = "Rancher HTTPS internal"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 443
+  port_range_max    = 443
+  remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in" {
-	description       = "Kube API ELB network"
-		direction         = "ingress"
-		ethertype         = "IPv4"
-		protocol          = "tcp"
-		port_range_min    = 6443
-		port_range_max    = 6443
-		remote_ip_prefix  = "100.125.0.0/16"
-		security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+  description       = "Kube API ELB network"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 6443
+  port_range_max    = 6443
+  remote_ip_prefix  = "100.125.0.0/16"
+  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_6443_in_self" {
-	description       = "Kube API internal"
-		direction         = "ingress"
-		ethertype         = "IPv4"
-		protocol          = "tcp"
-		port_range_min    = 6443
-		port_range_max    = 6443
-		remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
-		security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+  description       = "Kube API internal"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 6443
+  port_range_max    = 6443
+  remote_group_id   = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
+  security_group_id = opentelekomcloud_networking_secgroup_v2.k3s-server-secgroup.id
 }
 
 resource "opentelekomcloud_networking_secgroup_rule_v2" "sg_k3s_8472_in" {
@@ -520,27 +518,3 @@ resource "opentelekomcloud_compute_floatingip_associate_v2" "wireguard" {
   floating_ip = opentelekomcloud_networking_floatingip_v2.wireguard[0].address
   instance_id = opentelekomcloud_compute_instance_v2.wireguard[0].id
 }
- 
-# MySQL part (needs to be run in VPC)
-# #provider "mysql" {
-# #   endpoint = "${var.rds_host}:${var.rds_port}"
-# #   username = "root"
-# #   password = var.rds_root_password
-# #}
-# #
-# #resource "mysql_database" "app_db" {
-# #  name = var.rds_app_user
-# #}
-# #
-# #resource "mysql_user" "app_user" {
-# #  user               = var.rds_app_user
-# #  host               = "%"
-# #  plaintext_password = var.rds_app_password
-# #}
-# #
-# #resource "mysql_grant" "app_user" {
-# #  user       = var.rds_app_user
-# #  host       = "%"
-# #  database   = var.rds_app_user
-# #  privileges = ["ALL PRIVILEGES"]
-# #}

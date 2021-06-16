@@ -188,22 +188,22 @@ variable "wg_server_port" {
 
 variable "wg_server_private_key" {
   description = "Wireguard Server Private Key"
-  default = ""
+  default     = ""
 }
 
 variable "wg_server_public_key" {
   description = "Wireguard Server Public Key"
-  default = ""
+  default     = ""
 }
 
 variable "wg_peer_address" {
   description = "Wireguard Server Public Key"
-  default = "10.2.0.2/24"
+  default     = "10.2.0.2/24"
 }
 
 variable "wg_peer_public_key" {
   description = "Wireguard Peer Public Key"
-  default = ""
+  default     = ""
 }
 
 ####################
@@ -242,7 +242,7 @@ variable "k3s_version" {
 
 variable "cert-manager_version" {
   description = "Cert-Manager chart version"
-  default     = "v1.2.0"
+  default     = "v1.3.1"
 }
 
 ####################
@@ -251,5 +251,5 @@ variable "cert-manager_version" {
 
 variable "rancher_version" {
   description = "Version of Rancher app"
-  default     = "v2.5.6"
+  default     = "v2.5.8"
 }
