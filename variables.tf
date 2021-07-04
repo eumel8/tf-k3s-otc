@@ -3,7 +3,7 @@
 ####################
 
 variable "environment" {
-  default = "k3s-test"
+  default = "rke2-test"
 }
 
 ####################
@@ -69,61 +69,6 @@ variable "subnet_primary_dns" {
 variable "subnet_secondary_dns" {
   description = "Secondary DNS server of the Subnet"  
   default     = "100.125.129.199"
-}
-
-####################
-# RDS vars
-####################
-
-variable "rds_root_password" {
-  description = "RDS Root Password"  
-  default     = ""
-}
-
-variable "rds_type" {
-  description = "RDS Type"  
-  default     = "MySQL"
-}
-
-variable "rds_version" {
-  description = "Version of RDS"
-  default     = "8.0"
-}
-
-variable "rds_port" {
-  description = "Port of RDS"
-  default     = "3306"
-}
-
-variable "rds_az" {
-  description = "Availability zones of RDS (minimum 2)"
-  default     = ["eu-de-01" , "eu-de-02"]
-}
-
-variable "rds_volume_type" {
-  description = "Volume type of RDS (COMMON or ULTRAHIGH)"
-  default     = "COMMON"
-}
-
-variable "rds_volume_size" {
-  description = "Volume size of RDS in GB (40 minimum)"
-  default     = "40"
-}
-
-variable "rds_flavor" {
-  description = "Flavor of RDS"
-  default     = "rds.mysql.c2.medium.ha"
-}
-
-variable "rds_ha_mode" {
-  description = "Use HA RDS service"
-  type        = string
-  default     = "async" # or 'null' in non-ha
-}
-
-variable "rds_db" {
-  description = "Name of the RDS schema"
-  default     = "k3s"
 }
 
 ####################
@@ -232,17 +177,21 @@ variable "admin_email" {
 }
 
 ####################
-# K3S/K8S vars
+# RKE2S/K8S vars
 ####################
 
-variable "k3s_version" {
-  description = "K3S install version or channel, e.g stable/latest, v1.17.13+k3s2"
+variable "rke2_version" {
+  description = "RKE2 install version or channel, e.g stable/latest, v1.20.7+rke2r2"
   default     = "stable"
 }
 
 variable "cert-manager_version" {
   description = "Cert-Manager chart version"
   default     = "v1.3.1"
+
+variable "token" {
+  description = "RKE Server Token"
+  default     = "12345678"
 }
 
 ####################
