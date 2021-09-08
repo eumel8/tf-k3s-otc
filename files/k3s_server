@@ -41,9 +41,9 @@ rm -f hardening.pp
 
 # install k3s with MySQL backend
 if [ "${k3s_version}" == "latest" ] || [ "${k3s_version}" == "stable" ]; then
-  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}"
+  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}" --token=${token} --disable traefik
 else
-  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_VERSION=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}"
+  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_VERSION=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}" --token=${token} --disable traefik
 fi
 
 # install helm (3.3 wont't work on jetstack repo)
@@ -66,6 +66,54 @@ for i in 1 2 3 4 5; do
     --create-namespace && break || sleep 10;
 done
 
+# install ingress-nginx controller
+# cat > /var/lib/rancher/k3s/server/manifests/ingress-nginx.yaml << EOF
+cat > ingress-nginx.yaml << EOF
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-nginx
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: ingress-nginx
+  namespace: ingress-nginx
+spec:
+  chart: ingress-nginx
+  repo: https://kubernetes.github.io/ingress-nginx
+  targetNamespace: ingress-nginx
+  set:
+  valuesContent: |-
+    fullnameOverride: ingress-nginx
+    controller:
+      kind: DaemonSet
+      admissionWebhooks:
+        failurePolicy: Ignore
+      hostNetwork: true
+      hostPort:
+        enabled: true
+      service:
+        enabled: false
+        httpPort:
+          enabled: true
+          nodePort: 80
+          port: 80
+        httpsPort:
+          enabled: true
+          nodePort: 443
+          port: 443
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+      config:
+        use-forwarded-headers: "true"
+        server-tokens: "false"
+EOF
+
+kubectl apply -f ingress-nginx.yaml || exit 1
+
 # wait some time for cert-manager to be ready
 sleep 30
 
@@ -77,9 +125,11 @@ for i in 1 2 3 4 5; do
   helm upgrade -i rancher rancher-latest/rancher \
     --namespace cattle-system \
     --set hostname=${rancher_host}.${rancher_domain} \
+    --set ingress.enabled=true \
     --set ingress.tls.source=letsEncrypt \
     --set letsEncrypt.email=${admin_email} \
-    --set letsEncrypt.ingress.class=traefik \
+    --set letsEncrypt.ingress.class=nginx \
+    --set ingress.extraAnnotations.'kubernetes\.io/ingress\.class'=nginx \
     --set replicas=2 \
     --set auditLog.level=2 \
     --set systemDefaultRegistry=mtr.external.otc.telekomcloud.com \
