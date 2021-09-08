@@ -18,8 +18,12 @@ with the following resources:
 Interested in [RKE2](https://docs.rke2.io)? Refer to the [rke2 branch](https://github.com/eumel8/tf-k3s-otc/tree/rke2) with
 a full deployment of Kubernetes Cluster with RKE2 backend. This deployment has an etcd instead RDS as data backend.
 
+The last available K3S version with Traefik V1 is [v1.20.10](https://github.com/k3s-io/k3s/releases/tag/v1.20.10%2Bk3s1).
+Rancher and Cert-Manager will not work with Traefik V2.
+
 Rancher:
 --------
+
 
 Rancher app will installed with LetsEncrypt cert under the configured hostname. 
 
