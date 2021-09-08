@@ -247,7 +247,7 @@ variable "token" {
 
 variable "cert-manager_version" {
   description = "Cert-Manager chart version"
-  default     = "v1.3.1"
+  default     = "v1.5.3"
 }
 
 ####################
