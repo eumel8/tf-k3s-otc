@@ -258,3 +258,8 @@ variable "rancher_version" {
   description = "Version of Rancher app"
   default     = "v2.5.8"
 }
+
+variable "admin_password" {
+  description = "Bootstrap Password for Rancher 2.6"
+  default     = "admin"
+}

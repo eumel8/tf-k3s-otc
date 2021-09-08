@@ -244,6 +244,7 @@ data "template_file" "k3s_server" {
     rds_port             = var.rds_port
     rds_host             = opentelekomcloud_rds_instance_v3.rds.private_ips.0
     admin_email          = var.admin_email
+    admin_password       = var.admin_password
     rancher_host         = var.rancher_host
     rancher_domain       = var.rancher_domain
     rancher_version      = var.rancher_version

@@ -17,3 +17,7 @@ output "wireguard-server-key" {
 output "k3s-nodes" {
   value = [opentelekomcloud_compute_instance_v2.k3s-server-1.access_ip_v4, opentelekomcloud_compute_instance_v2.k3s-server-2.access_ip_v4]
 }
+
+output "bootstrap_password" {
+  value = var.admin_password
+}

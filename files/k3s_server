@@ -94,15 +94,8 @@ spec:
       hostPort:
         enabled: true
       service:
-        enabled: false
-        httpPort:
-          enabled: true
-          nodePort: 80
-          port: 80
-        httpsPort:
-          enabled: true
-          nodePort: 443
-          port: 443
+        enabled: true
+        type: NodePort
       metrics:
         enabled: true
         serviceMonitor:
@@ -113,6 +106,7 @@ spec:
 EOF
 
 kubectl apply -f ingress-nginx.yaml || exit 1
+#rm -f ingress-nginx.yaml
 
 # wait some time for cert-manager to be ready
 sleep 30
@@ -134,6 +128,7 @@ for i in 1 2 3 4 5; do
     --set auditLog.level=2 \
     --set systemDefaultRegistry=mtr.external.otc.telekomcloud.com \
     --set busyboxImage=mtr.external.otc.telekomcloud.com/mcsps/busybox:latest \
+    --set bootstrapPassword=${admin_password} \
     --version ${rancher_version} \
     --wait --timeout 10m0s \
     --create-namespace && break || sleep 60;
