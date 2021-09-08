@@ -78,7 +78,7 @@ resource "opentelekomcloud_lb_monitor_v2" "monitor_80" {
   delay          = 10
   timeout        = 5
   max_retries    = 10
-  url_path       = "/ping"
+  url_path       = "/healthz"
   http_method    = "GET"
   expected_codes = "200"
   monitor_port   = 80
@@ -90,7 +90,7 @@ resource "opentelekomcloud_lb_monitor_v2" "monitor_443" {
   delay          = 10
   timeout        = 5
   max_retries    = 10
-  url_path       = "/ping"
+  url_path       = "/healthz"
   http_method    = "GET"
   expected_codes = "200"
   monitor_port   = 80
@@ -102,7 +102,7 @@ resource "opentelekomcloud_lb_monitor_v2" "monitor_6443" {
   delay          = 10
   timeout        = 5
   max_retries    = 10
-  url_path       = "/ping"
+  url_path       = "/healthz"
   http_method    = "GET"
   expected_codes = "200"
   monitor_port   = 80
@@ -248,6 +248,7 @@ data "template_file" "k3s_server" {
     rancher_domain       = var.rancher_domain
     rancher_version      = var.rancher_version
     k3s_version          = var.k3s_version
+    token                = var.token
     cert-manager_version = var.cert-manager_version
   }
 }
@@ -260,6 +261,7 @@ data "template_file" "k3s_node" {
     rds_port             = var.rds_port
     rds_host             = opentelekomcloud_rds_instance_v3.rds.private_ips.0
     k3s_version          = var.k3s_version
+    token                = var.token
     cert-manager_version = var.cert-manager_version
   }
 }
