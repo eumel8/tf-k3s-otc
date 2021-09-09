@@ -33,6 +33,7 @@ systemctl disable puppet
 cat > hardening.pp << EOF
 class { 'os_hardening':
   enable_ipv4_forwarding => true,
+  ignore_max_files_warnings => true,
 }
 EOF
 
