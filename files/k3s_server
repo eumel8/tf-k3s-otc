@@ -82,7 +82,7 @@ spec:
 EOF
 
 kubectl apply -f traefik.yaml || exit 1
-rm -d traefik.yaml
+rm -f traefik.yaml
 
 # kubectl -n kube-system patch helmcharts traefik --type='merge' -p '{"spec":{"set":{"deployment":{"kind": "DaemonSet"}}}}'
 
