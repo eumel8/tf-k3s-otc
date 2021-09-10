@@ -236,13 +236,18 @@ variable "admin_email" {
 ####################
 
 variable "k3s_version" {
-  description = "K3S install version or channel, e.g stable/latest, v1.17.13+k3s2"
+  description = "K3S install version or channel, e.g stable/latest, v1.21.3+k3s1"
   default     = "stable"
+}
+
+variable "token" {
+  description = "Access Token for K3S Nodes (required since v1.20.9+k3s1"
+  default     = "12345678"
 }
 
 variable "cert-manager_version" {
   description = "Cert-Manager chart version"
-  default     = "v1.3.1"
+  default     = "v1.5.3"
 }
 
 ####################
@@ -251,5 +256,10 @@ variable "cert-manager_version" {
 
 variable "rancher_version" {
   description = "Version of Rancher app"
-  default     = "v2.5.8"
+  default     = "v2.6.0"
+}
+
+variable "admin_password" {
+  description = "Bootstrap Password for Rancher 2.6"
+  default     = "admin"
 }

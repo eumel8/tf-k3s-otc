@@ -18,8 +18,12 @@ with the following resources:
 Interested in [RKE2](https://docs.rke2.io)? Refer to the [rke2 branch](https://github.com/eumel8/tf-k3s-otc/tree/rke2) with
 a full deployment of Kubernetes Cluster with RKE2 backend. This deployment has an etcd instead RDS as data backend.
 
+The last available K3S version with Traefik V1 is [v1.20.10](https://github.com/k3s-io/k3s/releases/tag/v1.20.10%2Bk3s1).
+In Traefik V2 there is no health check exposed, so monitoring health checks for OTC ELB will be removed.
+
 Rancher:
 --------
+
 
 Rancher app will installed with LetsEncrypt cert under the configured hostname. 
 
@@ -62,7 +66,7 @@ rds_root_password = <rds_root_password>   # e.g. "12345678A+"
 rancher_host      = <rancher host name>   # e.g. "k3s"
 rancher_domain    = <rancher domain name> # e.g. "otc.mcsps.de"
 admin_email       = <admin email address for DNS/LetsEncrypt> # e.g. "nobody@telekom.de"
-k3s_version       = <k3s version> # e.g. channel stable/latest or version v1.17.13+k3s2
+k3s_version       = <k3s version> # e.g. channel stable/latest or version v1.21.3+k3s1
 access_key        = <otc access key>
 secret_key        = <otc secret key>
 public_key        = <public ssh key vor ECS>

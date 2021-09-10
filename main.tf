@@ -72,42 +72,6 @@ resource "opentelekomcloud_lb_pool_v2" "pool_6443" {
   listener_id = opentelekomcloud_lb_listener_v2.listener_6443.id
 }
  
-resource "opentelekomcloud_lb_monitor_v2" "monitor_80" {
-  pool_id        = opentelekomcloud_lb_pool_v2.pool_80.id
-  type           = "HTTP"
-  delay          = 10
-  timeout        = 5
-  max_retries    = 10
-  url_path       = "/ping"
-  http_method    = "GET"
-  expected_codes = "200"
-  monitor_port   = 80
-}
-
-resource "opentelekomcloud_lb_monitor_v2" "monitor_443" {
-  pool_id        = opentelekomcloud_lb_pool_v2.pool_443.id
-  type           = "HTTP"
-  delay          = 10
-  timeout        = 5
-  max_retries    = 10
-  url_path       = "/ping"
-  http_method    = "GET"
-  expected_codes = "200"
-  monitor_port   = 80
-}
- 
-resource "opentelekomcloud_lb_monitor_v2" "monitor_6443" {
-  pool_id        = opentelekomcloud_lb_pool_v2.pool_6443.id
-  type           = "HTTP"
-  delay          = 10
-  timeout        = 5
-  max_retries    = 10
-  url_path       = "/ping"
-  http_method    = "GET"
-  expected_codes = "200"
-  monitor_port   = 80
-}
-
 # server 1
 resource "opentelekomcloud_lb_member_v2" "member_80_1" {
   address       = opentelekomcloud_compute_instance_v2.k3s-server-1.access_ip_v4
@@ -244,10 +208,12 @@ data "template_file" "k3s_server" {
     rds_port             = var.rds_port
     rds_host             = opentelekomcloud_rds_instance_v3.rds.private_ips.0
     admin_email          = var.admin_email
+    admin_password       = var.admin_password
     rancher_host         = var.rancher_host
     rancher_domain       = var.rancher_domain
     rancher_version      = var.rancher_version
     k3s_version          = var.k3s_version
+    token                = var.token
     cert-manager_version = var.cert-manager_version
   }
 }
@@ -260,6 +226,7 @@ data "template_file" "k3s_node" {
     rds_port             = var.rds_port
     rds_host             = opentelekomcloud_rds_instance_v3.rds.private_ips.0
     k3s_version          = var.k3s_version
+    token                = var.token
     cert-manager_version = var.cert-manager_version
   }
 }
