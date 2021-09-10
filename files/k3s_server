@@ -42,9 +42,9 @@ rm -f hardening.pp
 
 # install k3s with MySQL backend
 if [ "${k3s_version}" == "latest" ] || [ "${k3s_version}" == "stable" ]; then
-  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}" --token=${token} --disable servicelb
+  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}" --token=${token}
 else
-  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_VERSION=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}" --token=${token} --disable servicelb
+  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_VERSION=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}" --token=${token}
 fi
 
 # install helm (3.3 wont't work on jetstack repo)
@@ -67,8 +67,24 @@ for i in 1 2 3 4 5; do
     --create-namespace && break || sleep 10;
 done
 
-# replicate traefik deployment to 2
-kubectl -n kube-system patch helmcharts traefik --type='merge' -p '{"spec":{"set":{"deployment":{"replicas": 2}}}}'
+# change traefik deployment to daemonset to get more pods running
+# https://rancher.com/docs/k3s/latest/en/helm/#customizing-packaged-components-with-helmchartconfig
+cat > traefik.yaml << EOF
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    deployment:
+      kind: DaemonSet
+EOF
+
+kubectl apply -f traefik.yaml || exit 1
+rm -d traefik.yaml
+
+# kubectl -n kube-system patch helmcharts traefik --type='merge' -p '{"spec":{"set":{"deployment":{"kind": "DaemonSet"}}}}'
 
 # wait some time for cert-manager to be ready
 sleep 30

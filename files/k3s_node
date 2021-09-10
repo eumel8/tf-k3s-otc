@@ -36,7 +36,7 @@ done
 
 # install k3s with MySQL backend
 if [ "${k3s_version}" == "latest" ] || [ "${k3s_version}" == "stable" ]; then
-  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}" --token=${token} --disable servicelb
+  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}" --token=${token}
 else
-  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_VERSION=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}" --token=${token} --disable servicelb
+  curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_VERSION=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}" --token=${token}
 fi
