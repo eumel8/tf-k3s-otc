@@ -19,7 +19,7 @@ Interested in [RKE2](https://docs.rke2.io)? Refer to the [rke2 branch](https://g
 a full deployment of Kubernetes Cluster with RKE2 backend. This deployment has an etcd instead RDS as data backend.
 
 The last available K3S version with Traefik V1 is [v1.20.10](https://github.com/k3s-io/k3s/releases/tag/v1.20.10%2Bk3s1).
-Rancher and Cert-Manager will not work with Traefik V2.
+In Traefik V2 there is no health check exposed, so monitoring health checks for OTC ELB will be removed.
 
 Rancher:
 --------
