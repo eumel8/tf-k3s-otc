@@ -71,6 +71,45 @@ resource "opentelekomcloud_lb_pool_v2" "pool_6443" {
   lb_method   = "ROUND_ROBIN"
   listener_id = opentelekomcloud_lb_listener_v2.listener_6443.id
 }
+
+resource "opentelekomcloud_lb_monitor_v2" "monitor_80" {
+  pool_id        = opentelekomcloud_lb_pool_v2.pool_80.id
+  type           = "HTTP"
+  delay          = 10
+  timeout        = 5
+  max_retries    = 10
+  domain_name    = "${var.rancher_host}.${var.rancher_domain}"
+  url_path       = "/healthz"
+  http_method    = "GET"
+  expected_codes = "200"
+  monitor_port   = 80
+}
+
+resource "opentelekomcloud_lb_monitor_v2" "monitor_443" {
+  pool_id        = opentelekomcloud_lb_pool_v2.pool_443.id
+  type           = "HTTP"
+  delay          = 10
+  timeout        = 5
+  max_retries    = 10
+  domain_name    = "${var.rancher_host}.${var.rancher_domain}"
+  url_path       = "/healthz"
+  http_method    = "GET"
+  expected_codes = "200"
+  monitor_port   = 80
+}
+ 
+resource "opentelekomcloud_lb_monitor_v2" "monitor_6443" {
+  pool_id        = opentelekomcloud_lb_pool_v2.pool_6443.id
+  type           = "HTTP"
+  delay          = 10
+  timeout        = 5
+  max_retries    = 10
+  domain_name    = "${var.rancher_host}.${var.rancher_domain}"
+  url_path       = "/healthz"
+  http_method    = "GET"
+  expected_codes = "200"
+  monitor_port   = 80
+}
  
 # server 1
 resource "opentelekomcloud_lb_member_v2" "member_80_1" {
