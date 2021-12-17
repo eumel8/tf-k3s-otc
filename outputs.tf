@@ -21,3 +21,7 @@ output "k3s-nodes" {
 output "bootstrap_password" {
   value = var.admin_password
 }
+
+output "vpc_id" {
+  value = opentelekomcloud_vpc_v1.vpc.id
+}
