@@ -64,6 +64,9 @@ for i in 1 2 3 4 5; do
     --version ${cert-manager_version} \
     --wait --timeout 10m0s \
     --set installCRDs=true \
+    --set image.repository=${repo_certmanager}/cert-manager-controller \
+    --set webhook.image.repository=${repo_certmanager}/cert-manager-webhook \
+    --set cainjector.image.repository=${repo_certmanager}/cert-manager-cainjector \
     --create-namespace && break || sleep 10;
 done
 

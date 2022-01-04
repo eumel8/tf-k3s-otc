@@ -252,6 +252,7 @@ data "template_file" "k3s_server" {
     rancher_domain       = var.rancher_domain
     rancher_version      = var.rancher_version
     registry             = var.registry
+    repo_certmanager     = var.repo_certmanager
     k3s_version          = var.k3s_version
     token                = var.token
     cert-manager_version = var.cert-manager_version

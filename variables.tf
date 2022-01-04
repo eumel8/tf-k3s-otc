@@ -259,6 +259,11 @@ variable "registry" {
   default = "mtr.external.otc.telekomcloud.com"
 }
 
+variable "repo_certmanager" {
+  description = "Repository of cert-manager Images"
+  default = "quay.io/jetstack"
+}
+
 variable "rancher_version" {
   description = "Version of Rancher app"
   default     = "v2.6.0"
