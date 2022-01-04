@@ -254,6 +254,11 @@ variable "cert-manager_version" {
 # Rancher vars
 ####################
 
+variable "registry" {
+  description = "Registry for Rancher images"
+  default = "mtr.external.otc.telekomcloud.com"
+}
+
 variable "rancher_version" {
   description = "Version of Rancher app"
   default     = "v2.6.0"

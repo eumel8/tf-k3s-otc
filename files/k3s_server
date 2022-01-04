@@ -93,6 +93,7 @@ sleep 30
 helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 
 # install now Rancher
+# https://github.com/rancher/rancher/tree/release/v2.6/chart
 for i in 1 2 3 4 5; do
   helm upgrade -i rancher rancher-latest/rancher \
     --namespace cattle-system \
@@ -103,8 +104,9 @@ for i in 1 2 3 4 5; do
     --set letsEncrypt.ingress.class=traefik \
     --set replicas=2 \
     --set auditLog.level=2 \
-    --set systemDefaultRegistry=mtr.external.otc.telekomcloud.com \
-    --set busyboxImage=mtr.external.otc.telekomcloud.com/mcsps/busybox:latest \
+    --set rancherImage=${registry}/rancher/rancher \
+    --set systemDefaultRegistry=${registry} \
+    --set busyboxImage=${registry}/mcsps/busybox:latest \
     --set bootstrapPassword=${admin_password} \
     --version ${rancher_version} \
     --wait --timeout 10m0s \
