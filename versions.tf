@@ -4,9 +4,6 @@ terraform {
       source  = "opentelekomcloud/opentelekomcloud"
       version = ">=1.25.4"
     }
-    template = {
-      source = "hashicorp/template"
-    }
   }
-  required_version = ">= 0.14"
+  required_version = ">= 1.1.0"
 }
