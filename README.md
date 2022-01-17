@@ -98,7 +98,7 @@ in the database, so ground work should work out.
 Better way is to use the [Rancher K3S Automatic Upgrade Procedure](https://rancher.com/docs/k3s/latest/en/upgrades/automated/)
 
 ```
-kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/download/v0.6.2/system-upgrade-controller.yaml
+kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/download/v0.8.1/system-upgrade-controller.yaml
 ```
 
 There are 2 scripts to apply (adjust K3S Version first, based on the [Release Plan](https://github.com/rancher/k3s/releases)
