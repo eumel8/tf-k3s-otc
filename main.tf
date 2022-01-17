@@ -239,9 +239,9 @@ resource "opentelekomcloud_dns_recordset_v2" "public_record" {
 ########### 
 # ECS part
 ########### 
-data "template_file" "k3s_server" {
-  template = file("${path.module}/files/k3s_server")
-  vars = {
+
+locals {
+  k3s_server = templatefile("${path.module}/files/k3s_server",{
     rds_root_password    = var.rds_root_password
     rds_db               = var.rds_db
     rds_port             = var.rds_port
@@ -256,12 +256,9 @@ data "template_file" "k3s_server" {
     k3s_version          = var.k3s_version
     token                = var.token
     cert-manager_version = var.cert-manager_version
-  }
-}
+  })
 
-data "template_file" "k3s_node" {
-  template = file("${path.module}/files/k3s_node")
-  vars = {
+  k3s_node = templatefile("${path.module}/files/k3s_node",{
     rds_root_password    = var.rds_root_password
     rds_db               = var.rds_db
     rds_port             = var.rds_port
@@ -269,19 +266,16 @@ data "template_file" "k3s_node" {
     k3s_version          = var.k3s_version
     token                = var.token
     cert-manager_version = var.cert-manager_version
-  }
-}
+  })
 
-data "template_file" "wireguard" {
-  template = file("${path.module}/files/wireguard")
-  vars = {
+  wireguard = templatefile("${path.module}/files/wireguard",{
     wg_server_address     = var.wg_server_address
     wg_server_port        = var.wg_server_port
     wg_server_private_key = var.wg_server_private_key
     wg_server_public_key  = var.wg_server_public_key
     wg_peer_address       = var.wg_peer_address
     wg_peer_public_key    = var.wg_peer_public_key
-  }
+  })
 }
 
 data "opentelekomcloud_images_image_v2" "image-1" {
@@ -458,7 +452,7 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-1" {
   flavor_id         = var.flavor_id
   key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
   security_groups   = ["${var.environment}-secgroup"]
-  user_data         = data.template_file.k3s_server.rendered
+  user_data         = local.k3s_server
   power_state       = var.power_state
   network {
     uuid = opentelekomcloud_vpc_subnet_v1.subnet.id
@@ -479,7 +473,7 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-2" {
   flavor_id         = var.flavor_id
   key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
   security_groups   = ["${var.environment}-secgroup"]
-  user_data         = data.template_file.k3s_node.rendered
+  user_data         = local.k3s_node
   power_state       = var.power_state
   network {
     uuid = opentelekomcloud_vpc_subnet_v1.subnet.id
@@ -501,7 +495,7 @@ resource "opentelekomcloud_compute_instance_v2" "wireguard" {
   flavor_id         = var.flavor_id
   key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
   security_groups   = ["${var.environment}-secgroup-wg"]
-  user_data         = data.template_file.wireguard.rendered
+  user_data         = local.wireguard
   power_state       = var.power_state
   network {
     uuid = opentelekomcloud_vpc_subnet_v1.subnet.id
