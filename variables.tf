@@ -269,6 +269,11 @@ variable "rancher_version" {
   default     = "v2.6.3"
 }
 
+variable "rancher_tag" {
+  description = "Tag of Rancher image"
+  default     = "v2.6.3"
+}
+
 variable "admin_password" {
   description = "Bootstrap Password for Rancher 2.6"
   default     = "admin"

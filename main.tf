@@ -251,6 +251,7 @@ locals {
     rancher_host         = var.rancher_host
     rancher_domain       = var.rancher_domain
     rancher_version      = var.rancher_version
+    rancher_tag          = var.rancher_tag
     registry             = var.registry
     repo_certmanager     = var.repo_certmanager
     k3s_version          = var.k3s_version

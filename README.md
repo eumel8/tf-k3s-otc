@@ -63,6 +63,7 @@ rds_root_password = <rds_root_password>   # e.g. "12345678A+"
 rancher_host      = <rancher host name>   # e.g. "k3s"
 rancher_domain    = <rancher domain name> # e.g. "otc.mcsps.de"
 rancher_version   = <rancher version>     # e.g. "v2.6.3"
+rancher_tag       = <rancher image tag>   # e.g. "v2.6.3-patch1"
 admin_email       = <admin email address for DNS/LetsEncrypt> # e.g. "nobody@telekom.de"
 k3s_version       = <k3s version> # e.g. channel stable/latest or version "v1.22.5+k3s1"
 access_key        = <otc access key>
