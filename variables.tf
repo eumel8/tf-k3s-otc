@@ -266,7 +266,7 @@ variable "repo_certmanager" {
 
 variable "rancher_version" {
   description = "Version of Rancher app"
-  default     = "v2.6.0"
+  default     = "v2.6.3"
 }
 
 variable "admin_password" {
