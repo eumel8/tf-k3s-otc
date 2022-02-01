@@ -18,12 +18,9 @@ with the following resources:
 Interested in [RKE2](https://docs.rke2.io)? Refer to the [rke2 branch](https://github.com/eumel8/tf-k3s-otc/tree/rke2) with
 a full deployment of Kubernetes Cluster with RKE2 backend. This deployment has an etcd instead RDS as data backend.
 
-The last available K3S version with Traefik V1 is [v1.20.10](https://github.com/k3s-io/k3s/releases/tag/v1.20.10%2Bk3s1).
-In Traefik V2 there is no health check exposed, so monitoring health checks for OTC ELB will be removed.
 
 Rancher:
 --------
-
 
 Rancher app will installed with LetsEncrypt cert under the configured hostname. 
 
@@ -32,10 +29,10 @@ You can reach the service under https://hostname.domain
 Prerequistes:
 ------------
 
-* Install Terraform CLI (v0.13.2+):
+* Install Terraform CLI (v1.1.4+):
 
 ```
-curl -o terraform.zip https://releases.hashicorp.com/terraform/0.13.2/terraform_0.13.2_linux_amd64.zip
+curl -o terraform.zip https://releases.hashicorp.com/terraform/1.1.4/terraform_1.1.4_linux_amd64.zip
 unzip terraform
 sudo mv terraform /usr/local/bin/
 rm terraform.zip
@@ -65,8 +62,9 @@ environment       = <environment name>    # e.g. "k3s-test"
 rds_root_password = <rds_root_password>   # e.g. "12345678A+"
 rancher_host      = <rancher host name>   # e.g. "k3s"
 rancher_domain    = <rancher domain name> # e.g. "otc.mcsps.de"
+rancher_version   = <rancher version>     # e.g. "v2.6.3"
 admin_email       = <admin email address for DNS/LetsEncrypt> # e.g. "nobody@telekom.de"
-k3s_version       = <k3s version> # e.g. channel stable/latest or version v1.21.3+k3s1
+k3s_version       = <k3s version> # e.g. channel stable/latest or version "v1.22.5+k3s1"
 access_key        = <otc access key>
 secret_key        = <otc secret key>
 public_key        = <public ssh key vor ECS>
@@ -119,10 +117,14 @@ helm -n cattle-system upgrade -i rancher rancher-latest/rancher
   --set letsEncrypt.email=nobody@example.com \
   --set letsEncrypt.ingress.class=traefik \
   --set replicas=2 \
-  --version v2.5.6 
+  --version v2.6.4
 ```
 
-Note: Rancher upgrade via Rancher API will often fail due the Rancher pod restarts during upgrade
+Notes: 
+
+* Rancher upgrade via Rancher API will often fail due the Rancher pod restarts during upgrade
+* Look into [support matrix](https://www.suse.com/suse-rancher/support-matrix/all-supported-versions)  which Rancher version supports which Kubernetes version
+
 
 Cert-Manager as well:
 
@@ -130,7 +132,7 @@ Cert-Manager as well:
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
 helm -n cert-manager upgrade -i cert-manager jetstack/cert-manager \
-    --version v1.2.0
+    --version v1.5.3
 ```
 
 OS-Upgrade (i.e. Kernel/new image) can be done in the following way:
@@ -142,7 +144,7 @@ terraform plan
 
 This will replace k3s-server-1 with a new instance.
 
-Note: this will also upgrade/downgrad the defined version of Rancher and Cert-Manager
+Note: this will also upgrade/downgrade the defined version of Rancher and Cert-Manager
 
 
 Shutdown-Mode
@@ -189,17 +191,17 @@ Activate Wireguard deployment and put the content of the generated key
 into terraform.tfvars:
 
 ```
-deploy_wireguard    = "true"
-wg_server_public_key = "8EPWNuwv5vldRuLX4RNds/U78a8g2kTctNHRBClHTC4="
+deploy_wireguard      = "true"
+wg_server_public_key  = "8EPWNuwv5vldRuLX4RNds/U78a8g2kTctNHRBClHTC4="
 wg_server_private_key = "cNyppGTX8gwWLTRxxrNYfiRqTEjJSCMlBT+TbcEGAl8="
-wg_peer_public_key = "9tjOb+VA7vCHQj2rcOBSln8U7tVXzeEoBITYVuq1LFw="
+wg_peer_public_key    = "9tjOb+VA7vCHQj2rcOBSln8U7tVXzeEoBITYVuq1LFw="
 ```
 
 Repeat key generating with the commands above or with the Wireguard client.
 Add the public key into terraform.tfvars:
 
 ```
-wg_peer_public_key = "9tjOb+VA7vCHQj2rcOBSln8U7tVXzeEoBITYVuq1LFw="
+wg_peer_public_key    = "9tjOb+VA7vCHQj2rcOBSln8U7tVXzeEoBITYVuq1LFw="
 ```
 
 Deploy with `terraform plan` & `terraform apply`
