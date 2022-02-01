@@ -242,7 +242,7 @@ variable "k3s_version" {
 
 variable "token" {
   description = "Access Token for K3S Nodes (required since v1.20.9+k3s1"
-  default     = "12345678"
+  default     = ""
 }
 
 variable "cert-manager_version" {
