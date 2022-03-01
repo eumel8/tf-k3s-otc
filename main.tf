@@ -269,6 +269,13 @@ locals {
     cert-manager_version = var.cert-manager_version
   })
 
+#  k3s_worker = templatefile("${path.module}/files/k3s_worker",{
+#    rancher_host         = var.rancher_host
+#    rancher_domain       = var.rancher_domain
+#    k3s_version          = var.k3s_version
+#    token                = var.token
+#  })
+
   wireguard = templatefile("${path.module}/files/wireguard",{
     wg_server_address     = var.wg_server_address
     wg_server_port        = var.wg_server_port
@@ -288,6 +295,7 @@ data "opentelekomcloud_images_image_v2" "image-2" {
   name        = var.image_name_server-2
   most_recent = true
 }
+
  
 # Secgroup part (ECS)
 resource "opentelekomcloud_networking_secgroup_v2" "k3s-server-secgroup" {
@@ -488,6 +496,28 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-2" {
     volume_size           = 30
   }
 }
+
+#resource "opentelekomcloud_compute_instance_v2" "k3s-worker-1" {
+#  depends_on        = [opentelekomcloud_compute_instance_v2.k3s-server-1]
+#  name              = "${var.environment}-worker-1"
+#  availability_zone = var.availability_zone1
+#  flavor_id         = var.flavor_id
+#  key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
+#  security_groups   = ["${var.environment}-secgroup"]
+#  user_data         = local.k3s_worker
+#  power_state       = var.power_state
+#  network {
+#    uuid = opentelekomcloud_vpc_subnet_v1.subnet.id
+#  }
+#  block_device {
+#    boot_index            = 0
+#    source_type           = "image"
+#    destination_type      = "volume"
+#    uuid                  = data.opentelekomcloud_images_image_v2.image-1.id
+#    delete_on_termination = true
+#    volume_size           = 100
+#  }
+#}
 
 resource "opentelekomcloud_compute_instance_v2" "wireguard" {
   count             = var.deploy_wireguard ? 1 : 0
