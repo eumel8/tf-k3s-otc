@@ -1,14 +1,18 @@
 #!/bin/bash -xe
 
-# install mysql-client (retry if network is not ready
+######################################################
+# install mysql-client (retry if network is not ready)
+######################################################
 for i in 1 2 3 4 5; do
   apt-get update && break || sleep 10;
 done
 DEBIAN_FRONTEND=noninteractive apt-get -yq -o Dpkg::Options::="--force-confdef" upgrade
 DEBIAN_FRONTEND=noninteractive apt-get -yq -o Dpkg::Options::="--force-confdef" install mysql-client
 
+################################################
 # doing os hardening
 # https://github.com/dev-sec/puppet-os-hardening
+################################################
 
 wget https://apt.puppetlabs.com/puppet-release-focal.deb
 dpkg -i puppet-release-focal.deb || exit 1
@@ -30,7 +34,9 @@ EOF
 /opt/puppetlabs/bin/puppet apply hardening.pp || exit 1
 rm -f hardening.pp
 
+##################################
 # set registry proxy if configured
+##################################
 if [ "${k3s_registry}" != "" ]; then
 mkdir -p /etc/rancher/k3s
 cat > /etc/rancher/k3s/registries.yaml << EOF
@@ -41,11 +47,13 @@ mirrors:
 EOF
 fi
 
+################################
+# install k3s with MySQL backend
+################################
 for i in 1 2 3 4 5; do
   mysql -uroot -P${rds_port} -h${rds_host} -p${rds_root_password} -e "CREATE DATABASE IF NOT EXISTS ${rds_db}" && break || sleep 10;
 done
 
-# install k3s with MySQL backend
 if [ "${k3s_version}" == "latest" ] || [ "${k3s_version}" == "stable" ]; then
   curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_version} sh -s - server --datastore-endpoint="mysql://root:${rds_root_password}@tcp(${rds_host}:${rds_port})/${rds_db}" --token=${token}
 else
