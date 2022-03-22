@@ -239,24 +239,26 @@ resource "opentelekomcloud_dns_recordset_v2" "public_record" {
 ########### 
 # ECS part
 ########### 
-
 locals {
   k3s_server = templatefile("${path.module}/files/k3s_server",{
-    rds_root_password    = var.rds_root_password
-    rds_db               = var.rds_db
-    rds_port             = var.rds_port
-    rds_host             = opentelekomcloud_rds_instance_v3.rds.private_ips.0
-    admin_email          = var.admin_email
-    admin_password       = var.admin_password
-    rancher_host         = var.rancher_host
-    rancher_domain       = var.rancher_domain
-    rancher_version      = var.rancher_version
-    rancher_tag          = var.rancher_tag
-    registry             = var.registry
-    repo_certmanager     = var.repo_certmanager
-    k3s_version          = var.k3s_version
-    token                = var.token
-    cert-manager_version = var.cert-manager_version
+    rds_root_password       = var.rds_root_password
+    rds_db                  = var.rds_db
+    rds_port                = var.rds_port
+    rds_host                = opentelekomcloud_rds_instance_v3.rds.private_ips.0
+    admin_email             = var.admin_email
+    admin_password          = var.admin_password
+    rancher_host            = var.rancher_host
+    rancher_domain          = var.rancher_domain
+    rancher_version         = var.rancher_version
+    rancher_tag             = var.rancher_tag
+    registry                = var.registry
+    system-default-registry = var.system-default-registry
+    image_traefik           = var.image_traefik
+    repo_certmanager        = var.repo_certmanager
+    k3s_version             = var.k3s_version
+    k3s_registry            = var.k3s_registry
+    token                   = var.token
+    cert-manager_version    = var.cert-manager_version
   })
 
   k3s_node = templatefile("${path.module}/files/k3s_node",{
@@ -265,6 +267,7 @@ locals {
     rds_port             = var.rds_port
     rds_host             = opentelekomcloud_rds_instance_v3.rds.private_ips.0
     k3s_version          = var.k3s_version
+    k3s_registry         = var.k3s_registry
     token                = var.token
     cert-manager_version = var.cert-manager_version
   })

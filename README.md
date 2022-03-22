@@ -70,8 +70,41 @@ access_key        = <otc access key>
 secret_key        = <otc secret key>
 public_key        = <public ssh key vor ECS>
 ```
-
 * Adapt `bucket` name in `backend.tf` with the bucket name which you created before
+
+* Optional settings for other image/repo locations of different parts of the installation
+
+```
+variable "k3s_registry" {
+  description = "replace docker.io registry with a customized endpoint for K3S installation"
+  default     = ""
+}
+
+variable "registry" {
+  description = "Registry for Rancher images"
+  default = "mtr.external.otc.telekomcloud.com"
+}
+
+variable "system-default-registry" {
+  description = "System Registry for K3S"
+  default = "mtr.external.otc.telekomcloud.com"
+}
+
+variable "repo_certmanager" {
+  description = "Repository of cert-manager Images"
+  default = "quay.io/jetstack"
+}
+
+variable "image_traefik" {
+  description = "Image for Traefik"
+  default = "rancher/mirrored-library-traefik"
+}
+```
+
+K3S supports [Airgap Installation](https://rancher.com/docs/k3s/latest/en/installation/airgap/),
+where all images and the k3s binary can download from the release page and install locally on the
+target node
+
 
 Deployment main app:
 --------------------

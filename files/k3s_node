@@ -30,6 +30,17 @@ EOF
 /opt/puppetlabs/bin/puppet apply hardening.pp || exit 1
 rm -f hardening.pp
 
+# set registry proxy if configured
+if [ "${k3s_registry}" != "" ]; then
+mkdir -p /etc/rancher/k3s
+cat > /etc/rancher/k3s/registries.yaml << EOF
+mirrors:
+  docker.io:
+    endpoint:
+      - ${k3s_registry}
+EOF
+fi
+
 for i in 1 2 3 4 5; do
   mysql -uroot -P${rds_port} -h${rds_host} -p${rds_root_password} -e "CREATE DATABASE IF NOT EXISTS ${rds_db}" && break || sleep 10;
 done

@@ -235,6 +235,11 @@ variable "admin_email" {
 # K3S/K8S vars
 ####################
 
+variable "k3s_registry" {
+  description = "replace docker.io registry with a customized endpoint for K3S installation"
+  default     = ""
+}
+
 variable "k3s_version" {
   description = "K3S install version or channel, e.g stable/latest, v1.21.3+k3s1"
   default     = "stable"
@@ -259,9 +264,19 @@ variable "registry" {
   default = "mtr.external.otc.telekomcloud.com"
 }
 
+variable "system-default-registry" {
+  description = "System Registry for K3S"
+  default = "mtr.external.otc.telekomcloud.com"
+}
+
 variable "repo_certmanager" {
   description = "Repository of cert-manager Images"
   default = "quay.io/jetstack"
+}
+
+variable "image_traefik" {
+  description = "Image for Traefik"
+  default = "rancher/mirrored-library-traefik"
 }
 
 variable "rancher_version" {

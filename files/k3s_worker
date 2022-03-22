@@ -29,6 +29,17 @@ EOF
 /opt/puppetlabs/bin/puppet apply hardening.pp || exit 1
 rm -f hardening.pp
 
+# set registry proxy if configured
+if [ "${k3s_registry}" != "" ]; then
+mkdir -p /etc/rancher/k3s
+cat > /etc/rancher/k3s/registries.yaml << EOF
+mirrors:
+  docker.io:
+    endpoint:
+      - ${k3s_registry}
+EOF
+fi
+
 # install k3s as worker node
 if [ "${k3s_version}" == "latest" ] || [ "${k3s_version}" == "stable" ]; then
   curl -svfL4 --retry 100 https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_version} K3S_URL=https://${rancher_host}.${rancher_domain}:6443 K3S_TOKEN=${token} sh -
