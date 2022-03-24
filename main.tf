@@ -155,6 +155,27 @@ resource "opentelekomcloud_lb_member_v2" "member_6443_2" {
   subnet_id     = opentelekomcloud_vpc_subnet_v1.subnet.subnet_id
 }
 
+resource "opentelekomcloud_lb_whitelist_v2" "whitelist_80" {
+  count            = var.elb_whitelistips != "" && var.elb_whitelist ? 1 : 0
+  enable_whitelist = true
+  whitelist        = var.elb_whitelistips
+  listener_id      = opentelekomcloud_lb_listener_v2.listener_80.id
+}
+
+resource "opentelekomcloud_lb_whitelist_v2" "whitelist_443" {
+  count            = var.elb_whitelistips != "" && var.elb_whitelist ? 1 : 0
+  enable_whitelist = true
+  whitelist        = var.elb_whitelistips
+  listener_id      = opentelekomcloud_lb_listener_v2.listener_443.id
+}
+
+resource "opentelekomcloud_lb_whitelist_v2" "whitelist_6443" {
+  count            = var.elb_whitelistips != "" && var.elb_whitelist ? 1 : 0
+  enable_whitelist = true
+  whitelist        = var.elb_whitelistips
+  listener_id      = opentelekomcloud_lb_listener_v2.listener_6443.id
+}
+
 ########### 
 # RDS part
 ########### 

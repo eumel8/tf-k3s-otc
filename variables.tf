@@ -72,6 +72,21 @@ variable "subnet_secondary_dns" {
 }
 
 ####################
+# ELB vars
+####################
+
+variable "elb_whitelist" {
+  description = "Enable Whitelisting for ELB Internet access"  
+  default     = false
+  type        = bool
+}
+
+variable "elb_whitelistips" {
+  description = "Whitelist IPs for ELB Internet access"  
+  default     = "80.158.48.20/32,80.158.48.21/32,80.158.48.29/32,80.158.48.30/32" # SNAP IP Pool
+}
+
+####################
 # RDS vars
 ####################
 
