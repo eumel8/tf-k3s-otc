@@ -86,6 +86,7 @@ registry                = <registry for Rancher images> # e.g. "mtr.external.otc
 system-default-registry = <system default registry for K3S> # e.g. "mtr.external.otc.telekomcloud.com"
 repo_certmanager        = <overwrite the repo for cert-manager> # e.g. "quay.io/jetstack"
 image_traefik           = <overwrite the image for Traefik> # e.g. "rancher/mirrored-library-traefik"
+k3s_addon               = <additional k3s start option> # e.g. "--kube-apiserver-arg=\"enable-admission-plugins=NodeRestriction,PodSecurityPolicy,ServiceAccount\""
 ```
 
 * Adapt `bucket` name in `backend.tf` with the bucket name which you created before

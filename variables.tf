@@ -260,6 +260,11 @@ variable "k3s_version" {
   default     = "stable"
 }
 
+variable "k3s_addon" {
+  description = "Additional K3S start parameter" # e.g. --kube-apiserver-arg="enable-admission-plugins=NodeRestriction,PodSecurityPolicy,ServiceAccount"
+  default     = ""
+}
+
 variable "token" {
   description = "Access Token for K3S Nodes (required since v1.20.9+k3s1"
   default     = ""

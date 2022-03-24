@@ -278,6 +278,7 @@ locals {
     repo_certmanager        = var.repo_certmanager
     k3s_version             = var.k3s_version
     k3s_registry            = var.k3s_registry
+    k3s_addon               = var.k3s_addon
     token                   = var.token
     cert-manager_version    = var.cert-manager_version
   })
