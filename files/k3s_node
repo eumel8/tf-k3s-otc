@@ -1,5 +1,23 @@
 #!/bin/bash -xe
 
+#####################################
+# disable non-working ipv6 in OTC ECS
+#####################################
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1
+sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+
+##################################################################
+# k3s hardening kernel settings
+# https://rancher.com/docs/k3s/latest/en/security/hardening_guide/
+##################################################################
+sysctl -w vm.panic_on_oom=0
+sysctl -w vm.overcommit_memory=1
+sysctl -w kernel.panic=10
+sysctl -w kernel.panic_on_oops=1
+sysctl -w kernel.keys.root_maxbytes=25000000
+
+
 ######################################################
 # install mysql-client (retry if network is not ready)
 ######################################################

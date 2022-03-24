@@ -17,7 +17,6 @@ sysctl -w kernel.panic=10
 sysctl -w kernel.panic_on_oops=1
 sysctl -w kernel.keys.root_maxbytes=25000000
 
-
 ######################################################
 # install mysql-client (retry if network is not ready)
 ######################################################
@@ -163,3 +162,13 @@ for i in 1 2 3 4 5; do
     --wait --timeout 10m0s \
     --create-namespace && break || sleep 60;
 done
+
+################
+# control output
+################
+
+echo "kubectl get nodes"
+kubectl get nodes
+
+echo "kubectl get pods -A"
+kubectl get pods -A
