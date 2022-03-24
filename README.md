@@ -268,13 +268,25 @@ route add 10.1.0.0/24 mask 255.255.255.0 10.2.0.1
 Debug:
 ------
 
-Installation take a while (10-15 min). If no service is reachable you can login
-to the first ECS instance. Most of the things should happen there in cloud-init:
+Installation take a while (10-15 min). If no service is reachable you can check
+console log to see cloud-init output. For that we have a [small programm](https://github.com/eumel8/otc-ecs-client/releases) to get easy console output, e.g. the first server:
+
+```shell
+./ecs -vm k3s-test-server-1                     
+...
+[  210.731060] cloud-init[1956]: Cloud-init v. 21.4-0ubuntu1~20.04.1 finished at Thu, 24 Mar 2022 14:07:45 +0000. Datasource DataSourceOpenStackLocal [net,ver=2].  Up 210.72 seconds
+[[0;32m  OK  [0m] Finished [0;1;39mExecute cloud user/final scripts[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mCloud-init target[0m.
+```
+
+you need OTC credentials, provided as environment variables to get the programm running
+
+
+If this doesn't help you can login to the first ECS instance via Wireguard VPN.
 
 ```
 ssh ubuntu@10.1.0.158
 $ sudo su -
-# tail /var/log/cloud-init-output.log
 ```
 
 Check k3s is running:
