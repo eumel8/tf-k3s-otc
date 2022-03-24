@@ -57,6 +57,8 @@ terraform apply -auto-approve
 
 * Create a `terraform.tfvars` file in the main folder
 
+mandatory flags:
+
 ```
 environment       = <environment name>    # e.g. "k3s-test"
 rds_root_password = <rds_root_password>   # e.g. "12345678A+"
@@ -70,6 +72,22 @@ access_key        = <otc access key>
 secret_key        = <otc secret key>
 public_key        = <public ssh key vor ECS>
 ```
+
+additional features (optional):
+
+```
+create_dns              = <create dns zone/zonerecord in otc for rancher_host/rancher_dom> # e.g. "true"
+elb_whitelist           = <enable ELB whitelist> # e.g. "true"
+elb_whitelistips        = <list of elb whitelist ip-addresses> # e.g. "80.158.2.75/32"
+flavor_id               = <bigger/other flavor for ECS instances> # e.g. "c3.xlarge.2"
+k3s_registry            = <container registry "proxy" for docker.io (global) # e.g. "mtr.external.otc.telekomcloud.com"
+cert-manager_version    = <overwrite cert-manager chart version (depends on Rancher version, careful for Rancher issuer
+registry                = <registry for Rancher images> # e.g. "mtr.external.otc.telekomcloud.com"
+system-default-registry = <system default registry for K3S> # e.g. "mtr.external.otc.telekomcloud.com"
+repo_certmanager        = <overwrite the repo for cert-manager> # e.g. "quay.io/jetstack"
+image_traefik           = <overwrite the image for Traefik> # e.g. "rancher/mirrored-library-traefik"
+```
+
 * Adapt `bucket` name in `backend.tf` with the bucket name which you created before
 
 * Optional settings for other image/repo locations of different parts of the installation
