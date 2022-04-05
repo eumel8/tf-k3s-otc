@@ -26,6 +26,9 @@ Rancher app will installed with LetsEncrypt cert under the configured hostname.
 
 You can reach the service under https://hostname.domain
 
+Take a look on the [Support Matrix](https://www.suse.com/de-de/suse-rancher/support-matrix/all-supported-versions/rancher-v2-6-3/) 
+which Rancher version fits for which K3S version and is supported.
+
 Prerequistes:
 ------------
 
