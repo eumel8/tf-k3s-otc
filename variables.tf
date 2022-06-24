@@ -272,7 +272,7 @@ variable "token" {
 
 variable "cert-manager_version" {
   description = "Cert-Manager chart version"
-  default     = "v1.5.3"
+  default     = "v1.5.5"
 }
 
 ####################
@@ -281,12 +281,12 @@ variable "cert-manager_version" {
 
 variable "registry" {
   description = "Registry for Rancher images"
-  default = "mtr.external.otc.telekomcloud.com"
+  default = "mtr.devops.telekom.de"
 }
 
 variable "system-default-registry" {
   description = "System Registry for K3S"
-  default = "mtr.external.otc.telekomcloud.com"
+  default = "mtr.devops.telekom.de"
 }
 
 variable "repo_certmanager" {
@@ -301,12 +301,12 @@ variable "image_traefik" {
 
 variable "rancher_version" {
   description = "Version of Rancher app"
-  default     = "v2.6.3"
+  default     = "v2.6.5"
 }
 
 variable "rancher_tag" {
   description = "Tag of Rancher image"
-  default     = "v2.6.3"
+  default     = "v2.6.5"
 }
 
 variable "admin_password" {
