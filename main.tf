@@ -548,7 +548,7 @@ resource "opentelekomcloud_compute_instance_v2" "wireguard" {
   count             = var.deploy_wireguard ? 1 : 0
   name              = "${var.environment}-wireguard"
   availability_zone = var.availability_zone1
-  flavor_id         = var.flavor_id
+  flavor_id         = var.wg_flavor_id
   key_pair          = opentelekomcloud_compute_keypair_v2.k3s-server-key.name
   security_groups   = ["${var.environment}-secgroup-wg"]
   user_data         = local.wireguard

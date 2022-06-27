@@ -191,6 +191,11 @@ variable "deploy_wireguard" {
   type        = bool
 } 
 
+variable "wg_flavor_id" {
+  description = "ID of Wireguard Flavor"
+  default     = "c3.large.2"
+}
+
 variable "wg_server_address" {
   description = "Ip address of the Wireguard Server"
   default     = "10.2.0.1/24"
