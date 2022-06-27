@@ -83,10 +83,10 @@ create_dns              = <create dns zone/zonerecord in otc for rancher_host/ra
 elb_whitelist           = <enable ELB whitelist> # e.g. "true"
 elb_whitelistips        = <list of elb whitelist ip-addresses> # e.g. "80.158.2.75/32"
 flavor_id               = <bigger/other flavor for ECS instances> # e.g. "c3.xlarge.2"
-k3s_registry            = <container registry "proxy" for docker.io (global) # e.g. "mtr.external.otc.telekomcloud.com"
+k3s_registry            = <container registry "proxy" for docker.io (global) # e.g. "mtr.devops.telekom.de"
 cert-manager_version    = <overwrite cert-manager chart version (depends on Rancher version, careful for Rancher issuer
-registry                = <registry for Rancher images> # e.g. "mtr.external.otc.telekomcloud.com"
-system-default-registry = <system default registry for K3S> # e.g. "mtr.external.otc.telekomcloud.com"
+registry                = <registry for Rancher images> # e.g. "mtr.devops.telekom.de"
+system-default-registry = <system default registry for K3S> # e.g. "mtr.devops.telekom.de"
 repo_certmanager        = <overwrite the repo for cert-manager> # e.g. "quay.io/jetstack"
 image_traefik           = <overwrite the image for Traefik> # e.g. "rancher/mirrored-library-traefik"
 k3s_addon               = <additional k3s start option> # e.g. "--kube-apiserver-arg=\"enable-admission-plugins=NodeRestriction,PodSecurityPolicy,ServiceAccount\""
@@ -104,12 +104,12 @@ variable "k3s_registry" {
 
 variable "registry" {
   description = "Registry for Rancher images"
-  default = "mtr.external.otc.telekomcloud.com"
+  default = "mtr.devops.telekom.de"
 }
 
 variable "system-default-registry" {
   description = "System Registry for K3S"
-  default = "mtr.external.otc.telekomcloud.com"
+  default = "mtr.devops.telekom.de"
 }
 
 variable "repo_certmanager" {
@@ -188,7 +188,16 @@ Cert-Manager as well:
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
 helm -n cert-manager upgrade -i cert-manager jetstack/cert-manager \
-    --version v1.5.3
+    --version v1.8.1
+```
+
+Notes:
+
+* For upgrade cert-manager from previous version (<1.7.0) use the migration tool before
+`terraform apply` with newer version. Get (cmctl)[https://github.com/cert-manager/cert-manager/releases]
+
+```
+cmctl upgrade migrate-api-version
 ```
 
 OS-Upgrade (i.e. Kernel/new image) can be done in the following way:
