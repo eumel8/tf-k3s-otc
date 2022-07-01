@@ -200,6 +200,22 @@ Notes:
 cmctl upgrade migrate-api-version
 ```
 
+The stored Helm config needs also migrate:
+
+```
+# get latest release secret for Rancher
+kubectl -n cattle-system get secret sh.helm.release.v1.rancher.v1 -o yaml > release.yaml
+cat release.yaml | grep -oP '(?<=release: ).*' | base64 -d | base64 -d | gzip -d > release.data.decoded
+sed -i -e 's/cert-manager.io\/v1beta1/cert-manager.io\/v1/' release.data.decoded 
+cat release.data.decoded  | gzip | base64 | base64 > release.data.encoded 
+tr -d "\n" < release.data.encoded > release.data.encoded.final
+releaseData=$(cat release.data.encoded.final)
+sed 's/^\(\s*release\s*:\s*\).*/\1'$releaseData'/' release.yaml > release-new.yaml
+kubectl -n cattle-system apply -f release-new.yaml
+```
+
+compare: [Update Api Versions in Helm](https://helm.sh/docs/topics/kubernetes_apis/#updating-api-versions-of-a-release-manifest)
+
 OS-Upgrade (i.e. Kernel/new image) can be done in the following way:
 
 ```

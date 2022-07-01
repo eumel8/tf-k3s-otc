@@ -95,6 +95,12 @@ variable "rds_root_password" {
   default     = ""
 }
 
+#variable "rds_lock" {
+#  description = "Prevent RDS for destroying"
+#  default     = false
+#  type        = bool
+#}
+
 variable "rds_type" {
   description = "RDS Type"  
   default     = "MySQL"
@@ -306,12 +312,12 @@ variable "image_traefik" {
 
 variable "rancher_version" {
   description = "Version of Rancher app"
-  default     = "v2.6.5"
+  default     = "v2.6.6"
 }
 
 variable "rancher_tag" {
   description = "Tag of Rancher image"
-  default     = "v2.6.5"
+  default     = "v2.6.6"
 }
 
 variable "admin_password" {

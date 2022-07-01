@@ -233,6 +233,10 @@ resource "opentelekomcloud_rds_instance_v3" "rds" {
     start_time = "08:00-09:00"
     keep_days  = 30
   }
+
+#  lifecycle {
+#      prevent_destroy = true
+#  }
 }
 
 ########### 
@@ -280,7 +284,7 @@ locals {
     k3s_registry            = var.k3s_registry
     k3s_addon               = var.k3s_addon
     token                   = var.token
-    cert-manager_version    = var.cert-manager_version
+    cert-manager_version    = trim(var.cert-manager_version,"v")
   })
 
   k3s_node = templatefile("${path.module}/files/k3s_node",{
