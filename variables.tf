@@ -168,12 +168,12 @@ variable "availability_zone3" {
 
 variable "image_name_server-1" {
   description = "Name of the image"
-  default     = "Standard_Ubuntu_20.04_latest"
+  default     = "Standard_Ubuntu_22.04_latest"
 }
 
 variable "image_name_server-2" {
   description = "Name of the image"
-  default     = "Standard_Ubuntu_20.04_latest"
+  default     = "Standard_Ubuntu_22.04_latest"
 }
 
 variable "flavor_id" {
