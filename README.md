@@ -127,6 +127,44 @@ K3S supports [Airgap Installation](https://rancher.com/docs/k3s/latest/en/instal
 where all images and the k3s binary can download from the release page and install locally on the
 target node
 
+Optain real client ip-addresses from ELB on Traefik logs:
+---------------------------------------------------------
+
+With TCP Option Address you can read the real client ip-address from ELB on Traefik logs. There is a
+TOA Kernel Module to archive this. The original module from (Huawei)[https://github.com/Huawei/TCP_option_address]
+is outdated. As a standard Kernel feature each (each other module)[https://github.com/ucloud/ucloud-toa] can
+be used.
+
+```
+apt-get update
+apt-get install -y git gcc make linux-headers-`uname -r`
+git clone https://github.com/ucloud/ucloud-toa.git
+cd ucloud-toa
+make
+insmod toa.ko 
+lsmod |grep toa
+toa                    16384  0
+# dmesg |grep TOA
+[40000.624129] TOA: TOA 2.0.0.0 by pukong.wjm
+[40000.663859] TOA: CPU [1] sk_data_ready_fn = kallsyms_lookup_name(sock_def_readable) = 00000000f0ca8f39
+[40000.663864] TOA: CPU [1] inet6_stream_ops_p = kallsyms_lookup_name(inet6_stream_ops) = 00000000487f49df
+[40000.663864] TOA: CPU [1] ipv6_specific_p = kallsyms_lookup_name(ipv6_specific) = 00000000a382d798
+[40000.663867] TOA: CPU [1] hooked inet_getname <00000000f51e2b2d> --> <0000000077c30c10>
+[40000.663868] TOA: CPU [1] hooked tcp_v4_syn_recv_sock <00000000ceaf7e8b> --> <00000000bdfeea7b>
+[40000.663869] TOA: CPU [1] hooked inet6_getname <00000000d483597c> --> <0000000026666108>
+[40000.663870] TOA: CPU [1] hooked tcp_v6_syn_recv_sock <00000000720e8fc8> --> <00000000feb60d88>
+[40000.663871] TOA: toa loaded
+```
+
+The running Kernel version must be the same as the module is compiled. Good practice is to download and
+compile the module via cloud-init.
+
+Verify traefik logs:
+
+```
+kubectl -n kube-system logs traefik-r2wvk
+87.152.164.121 - - [05/Jul/2022:07:46:05 +0000] "GET /v1/events HTTP/2.0" 200 32619 "-" "-" 99 "websecure-rancher-cattle-system-k3s-otc-mcsps-de@kubernetes" "http://10.42.0.4:80" 55ms
+```
 
 Deployment main app:
 --------------------
