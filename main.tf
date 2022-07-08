@@ -31,21 +31,21 @@ resource "opentelekomcloud_lb_loadbalancer_v2" "lb" {
 }
 
 resource "opentelekomcloud_lb_listener_v2" "listener_80" {
-  protocol         = "TCP"
+  protocol         = "HTTP"
   name             = "${var.environment}-listener_80"
   protocol_port    = 80
   loadbalancer_id  = opentelekomcloud_lb_loadbalancer_v2.lb.id
 }
 
 resource "opentelekomcloud_lb_listener_v2" "listener_443" {
-  protocol         = "TCP"
+  protocol         = "HTTP"
   name             = "${var.environment}-listener_443"
   protocol_port    = 443
   loadbalancer_id  = opentelekomcloud_lb_loadbalancer_v2.lb.id
 }
 
 resource "opentelekomcloud_lb_listener_v2" "listener_6443" {
-  protocol         = "TCP"
+  protocol         = "HTTP"
   name             = "${var.environment}-listener_6443"
   protocol_port    = 6443
   loadbalancer_id  = opentelekomcloud_lb_loadbalancer_v2.lb.id
