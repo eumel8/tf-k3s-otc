@@ -575,8 +575,8 @@ resource "opentelekomcloud_networking_floatingip_v2" "wireguard" {
   pool  = "admin_external_net"
 }
 
-resource "opentelekomcloud_compute_floatingip_associate_v2" "wireguard" {
+resource "opentelekomcloud_networking_floatingip_associate_v2" "wireguard" {
   count       = var.deploy_wireguard ? 1 : 0
   floating_ip = opentelekomcloud_networking_floatingip_v2.wireguard[0].address
-  instance_id = opentelekomcloud_compute_instance_v2.wireguard[0].id
+  port_id     = opentelekomcloud_compute_instance_v2.wireguard[0].network.0.port
 }
