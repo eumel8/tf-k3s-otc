@@ -31,24 +31,26 @@ resource "opentelekomcloud_lb_loadbalancer_v2" "lb" {
 }
 
 resource "opentelekomcloud_lb_listener_v2" "listener_80" {
-  protocol         = "HTTP"
+  protocol         = "TCP"
   name             = "${var.environment}-listener_80"
   protocol_port    = 80
   loadbalancer_id  = opentelekomcloud_lb_loadbalancer_v2.lb.id
+  depends_on       = [opentelekomcloud_lb_listener_v2.listener_6443]
 }
 
 resource "opentelekomcloud_lb_listener_v2" "listener_443" {
-  protocol         = "HTTP"
+  protocol         = "TCP"
   name             = "${var.environment}-listener_443"
   protocol_port    = 443
   loadbalancer_id  = opentelekomcloud_lb_loadbalancer_v2.lb.id
 }
 
 resource "opentelekomcloud_lb_listener_v2" "listener_6443" {
-  protocol         = "HTTP"
+  protocol         = "TCP"
   name             = "${var.environment}-listener_6443"
   protocol_port    = 6443
   loadbalancer_id  = opentelekomcloud_lb_loadbalancer_v2.lb.id
+  depends_on       = [opentelekomcloud_lb_listener_v2.listener_443]
 }
 
 resource "opentelekomcloud_lb_pool_v2" "pool_80" {
@@ -56,6 +58,7 @@ resource "opentelekomcloud_lb_pool_v2" "pool_80" {
   name        = "${var.environment}-pool_80"
   lb_method   = "ROUND_ROBIN"
   listener_id = opentelekomcloud_lb_listener_v2.listener_80.id
+  depends_on  = [opentelekomcloud_lb_pool_v2.pool_6443]
 }
 
 resource "opentelekomcloud_lb_pool_v2" "pool_443" {
@@ -70,6 +73,7 @@ resource "opentelekomcloud_lb_pool_v2" "pool_6443" {
   name        = "${var.environment}-pool_6443"
   lb_method   = "ROUND_ROBIN"
   listener_id = opentelekomcloud_lb_listener_v2.listener_6443.id
+  depends_on  = [opentelekomcloud_lb_pool_v2.pool_443]
 }
 
 resource "opentelekomcloud_lb_monitor_v2" "monitor_80" {
