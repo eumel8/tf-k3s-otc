@@ -157,7 +157,6 @@ for i in 1 2 3 4 5; do
     --set rancherImage=${registry}/rancher/rancher \
     --set rancherImageTag=${rancher_tag} \
     --set systemDefaultRegistry=${registry} \
-    --set busyboxImage=${registry}/mcsps/busybox:latest \
     --set bootstrapPassword=${admin_password} \
     --version ${rancher_version} \
     --wait --timeout 10m0s \
