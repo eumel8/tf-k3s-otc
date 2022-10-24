@@ -36,7 +36,9 @@ wget https://apt.puppetlabs.com/puppet-release-focal.deb
 dpkg -i puppet-release-focal.deb || exit 1
 rm -f puppet-release-focal.deb
 
-apt-get update
+for i in 1 2 3 4 5; do
+  apt-get update && break || sleep 10;
+done
 apt-get -yq install puppet-agent
 
 systemctl stop puppet
