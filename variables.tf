@@ -312,12 +312,12 @@ variable "image_traefik" {
 
 variable "rancher_version" {
   description = "Version of Rancher app"
-  default     = "v2.6.6"
+  default     = "v2.6.9"
 }
 
 variable "rancher_tag" {
   description = "Tag of Rancher image"
-  default     = "v2.6.6"
+  default     = "v2.6.9"
 }
 
 variable "admin_password" {
