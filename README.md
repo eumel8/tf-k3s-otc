@@ -94,6 +94,8 @@ k3s_addon               = <additional k3s start option> # e.g. "--kube-apiserver
 
 * Adapt `bucket` name in `backend.tf` with the bucket name which you created before
 
+(or delete file for local storage)
+
 * Optional settings for other image/repo locations of different parts of the installation
 
 ```
@@ -172,9 +174,18 @@ Deployment main app:
 ```
 export S3_ACCESS_KEY=<otc access key>
 export S3_SECRET_KEY=<otc secret key>
-export TF_VAR_environment=<your k3s deployment>
+export TF_VAR_environment=<your k3s deployment> # e.g. k3s-test
+export S3_BUCKET=<s3 bucket name> # e.g. tf-k3s-state
+export S3_ENDPOINT=<s3 endpoint> # e.g. obs.eu-de.otc.t-systems.com
+export S3_REGION=<s3 region> # e.g. eu-de
 
-terraform init -backend-config="access_key=$S3_ACCESS_KEY" -backend-config="secret_key=$S3_SECRET_KEY" -backend-config="key=${TF_VAR_environment}.tfstate"
+terraform init \
+  -backend-config="access_key=$S3_ACCESS_KEY" \
+  -backend-config="secret_key=$S3_SECRET_KEY" \
+  -backend-config="key=${TF_VAR_environment}.tfstate" \
+  -backend-config="bucket=$S3_BUCKET" \
+  -backend-config="endpoint=$S3_ENDPOINT" \
+  -backend-config="region=$S3_REGION"
 
 terraform plan
 terraform apply
