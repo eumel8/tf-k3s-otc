@@ -528,6 +528,9 @@ resource "opentelekomcloud_compute_instance_v2" "k3s-server-2" {
     delete_on_termination = true
     volume_size           = 30
   }
+  depends_on = [
+    opentelekomcloud_compute_instance_v2.k3s-server-1
+  ]
 }
 
 #resource "opentelekomcloud_compute_instance_v2" "k3s-worker-1" {
