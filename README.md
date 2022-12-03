@@ -1,7 +1,11 @@
 tf-k3s-otc
 ==========
+Install Rancher on top of K3S on OTC with Terraform
 
-[![Install Rancher on top of K3S on OTC with Terraform](https://i9.ytimg.com/vi_webp/hP2dJa64ArY/mqdefault.webp?time=1606254900000&sqp=CLSC9v0F&rs=AOn4CLCj9wWK0kcgBC5CHERXLyNXFjLjkA)](http://www.youtube.com/watch?v=hP2dJa64ArY "Install Rancher on top of K3S on OTC with Terraform")
+[![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Release](https://img.shields.io/github/v/release/eumel8/otc-rds-operator?display_name=tag)](https://github.com/eumel8/otc-rds-operator/releases)
+[![OTC](https://img.shields.io/github/search/eumel8/tf-k3s-otc/otc)](https://github.com/topics/otc)
+[![Youtube](https://img.shields.io/youtube/views/hP2dJa64ArY?label=Youtube)](https://www.youtube.com/watch?v=hP2dJa64ArY)
 
 
 Deploy [K3S](https://k3s.io) with Terraform on Open Telekom Cloud (OTC)
@@ -13,7 +17,7 @@ with the following resources:
 * ELB
 * RDS (minimal HA instance)
 * ECS (2 master nodes Ubuntu 20.04)
-* DNS (existing zone can be import with `terraform import opentelekomcloud_dns_zone_v2.dns <zone_id>`
+* DNS (existing zone can be import with `terraform import opentelekomcloud_dns_zone_v2.dns <zone_id>`)
 
 Interested in [RKE2](https://docs.rke2.io)? Refer to the [rke2 branch](https://github.com/eumel8/tf-k3s-otc/tree/rke2) with
 a full deployment of Kubernetes Cluster with RKE2 backend. This deployment has an etcd instead RDS as data backend.
@@ -30,7 +34,7 @@ Take a look on the [Support Matrix](https://www.suse.com/de-de/suse-rancher/supp
 which Rancher version fits for which K3S version and is supported.
 
 Prerequistes:
-------------
+-------------
 
 * Install Terraform CLI (v1.1.4+):
 
@@ -435,7 +439,7 @@ working steps:
    * Install [rancher-backup](https://rancher.com/docs/rancher/v2.x/en/backups/v2.5/#installing-rancher-backup-with-the-helm-cli)
    * Perform etcd backup
    * Perform S3 backup
-   * Create Git Repo for new Raseed environment in a CI/CD pipeline
+   * Create Git Repo for new Rancher Upstream environment in a CI/CD pipeline
    * Shutdown old public endpoint (cluster agents of downstream cluster should disconnect)
    * Switch DNS entry of public endpoint (if no automation like external-dns is used)
    * Execute created CI/CD Pipeline for environment
@@ -446,7 +450,7 @@ working steps:
 
 
 Credits:
--------
+--------
 
 Frank Kloeker <f.kloeker@telekom.de>
 
