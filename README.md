@@ -3,7 +3,7 @@ tf-k3s-otc
 Install Rancher on top of K3S on OTC with Terraform
 
 [![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Release](https://img.shields.io/github/v/release/eumel8/otc-rds-operator?display_name=tag)](https://github.com/eumel8/otc-rds-operator/releases)
+[![Release](https://img.shields.io/github/v/release/eumel8/tf-k3s-otc?display_name=tag)](https://github.com/eumel8/tf-k3s-otc-rds/releases)
 [![OTC](https://img.shields.io/github/search/eumel8/tf-k3s-otc/otc)](https://github.com/topics/otc)
 [![Youtube](https://img.shields.io/youtube/views/hP2dJa64ArY?label=Youtube)](https://www.youtube.com/watch?v=hP2dJa64ArY)
 
