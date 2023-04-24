@@ -160,6 +160,7 @@ for i in 1 2 3 4 5; do
     --set rancherImageTag=${rancher_tag} \
     --set systemDefaultRegistry=${registry} \
     --set bootstrapPassword=${admin_password} \
+    --set global.cattle.psp.enabled=false \
     --version ${rancher_version} \
     --wait --timeout 10m0s \
     --create-namespace && break || sleep 60;
